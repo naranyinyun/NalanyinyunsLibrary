@@ -1,9 +1,19 @@
-# About
-This is the demo site for [Fuwari](https://github.com/saicaca/fuwari).
+# Introduction
 
-::github{repo="saicaca/fuwari"}
+初期称号：打着太阳伞的文静天然素材。（日傘を差した物静かな天然素材）
 
-> ### Sources of images used in this site
-> - [Unsplash](https://unsplash.com/)
-> - [星と少女](https://www.pixiv.net/artworks/108916539) by [Stella](https://www.pixiv.net/users/93273965)
-> - [Rabbit - v1.4 Showcase](https://civitai.com/posts/586908) by [Rabbit_YourMajesty](https://civitai.com/user/Rabbit_YourMajesty)
+喜欢读书的文学系少女，收藏的书多到必须要把衣柜清一个角落来放书，才能收纳完成。
+
+在班里没什么存在感，被称作“没有影子的人”。
+
+在室外总是撑着太阳伞，体育课也从来都只是参观。因此加入了队里也没有参加练习与比赛，而是队伍的经理人。
+
+拥有着与外表不相称的毒舌，吐槽会吐的非常刻薄不留情，也经常会无意间（？）地说出一些反效果的话，来吓唬别人。
+
+貌似运动不足，但突发情况下会出现神一般的闪避或格挡，再以犀利的吐槽进行补刀。
+
+人设由《ONE》当中上月澪与里村茜的结合而来（“美魚（みお）”和“澪（みお）”同音、无口 + 伞是茜的象征）
+
+BL 爱好者，常常妄想恭介×理树的配对，曾经被库特锐评为“所持有的知识尽是些过时的耽美”。有点喜欢木莓酱。
+
+在人偶剧环节展现了强大的配音才能。
