@@ -66,7 +66,7 @@ export const profileConfig: ProfileConfig = {
 export const licenseConfig: LicenseConfig = {
 	enable: true,
 	name: "Nalanyinyun's Library Content License",
-	url: "https://nalanyinyun.work/NLGL",
+	url: "https://github.com/naranyinyun/NalanyinyunsLibrary/blob/main/NLGL/",
 };
 
 export const expressiveCodeConfig: ExpressiveCodeConfig = {
