@@ -40,19 +40,17 @@ export const siteConfig: SiteConfig = {
 };
 
 export const navBarConfig: NavBarConfig = {
-	links: [LinkPreset.Home, LinkPreset.About],
+	links: [LinkPreset.Home, LinkPreset.About, LinkPreset.LinkExchange ],
 };
 
 export const profileConfig: ProfileConfig = {
 	avatar: "assets/images/91950505.png", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
 	name: "Nalanyinyun",
-	bio: "日傘を差した物静かな天然素材 ",
+	bio: "日傘を差した物静かな天然素材",
 	links: [
 		{
 			name: "Bilibili",
-			icon: "fa6-brands:bilibili", // Visit https://icones.js.org/ for icon codes
-			// You will need to install the corresponding icon set if it's not already included
-			// `pnpm add @iconify-json/<icon-set-name>`
+			icon: "fa6-brands:bilibili", 
 			url: "https://space.bilibili.com/384920476",
 		},
 		{
