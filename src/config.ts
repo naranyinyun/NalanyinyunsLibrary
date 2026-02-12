@@ -40,7 +40,7 @@ export const siteConfig: SiteConfig = {
 };
 
 export const navBarConfig: NavBarConfig = {
-	links: [LinkPreset.Home, LinkPreset.About, LinkPreset.LinkExchange ],
+	links: [LinkPreset.Home, LinkPreset.About, LinkPreset.LinkExchange],
 };
 
 export const profileConfig: ProfileConfig = {
@@ -50,7 +50,7 @@ export const profileConfig: ProfileConfig = {
 	links: [
 		{
 			name: "Bilibili",
-			icon: "fa6-brands:bilibili", 
+			icon: "fa6-brands:bilibili",
 			url: "https://space.bilibili.com/384920476",
 		},
 		{
