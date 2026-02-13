@@ -6,8 +6,6 @@ category: 技术
 draft: true
 ---
 
-# Archlinux 安装指南
-
 这篇文章会介绍如何安装 Archlinux，以及一些常用的配置方法。
 
 ## 准备工作
@@ -40,20 +38,20 @@ draft: true
 
 首先确认系统识别到了网络接口：
 
-``` bash
+``` shell
 ip link
 ```
 
 确认网卡没有被 `rfkill`
 
-``` bash
+``` shell
 rfkill list
 rfkill unblock all # 如果被阻止，解除阻止，可以指定设备，不用 all
 ```
 
 进入 `iwctl` 交互式命令行：
 
-``` bash
+``` shell
 iwctl
 device list # 列出无线设备
 station [device name] scan
@@ -63,7 +61,7 @@ station [device name] connect [SSID]
 
 ### 系统时间
 
-``` bash
+``` shell
 timedatectl set-ntp true
 ```
 
@@ -85,4 +83,218 @@ timedatectl set-ntp true
 > [!WARNING]
 > 双系统用户*不要格式化 EFI*，这会使你的其他系统无法引导
 
+如果你需要创建 btrfs 子卷，可以参考下面的命令：
+
+``` shell
+mount -t btrfs -o compress=zstd /dev/sdxn /mnt
+btrfs subvolume create /mnt/@
+btrfs subvolume create /mnt/@home
+```
+
+> [!IMPORTANT]
+> `timemshift` 以及很多 `btrfs` 快照工具都需要这种子卷布局，如果你计划使用这类工具，不要创建 `@.snapshots` .
+
 ## 安装基础系统
+
+### 挂载分区
+
+挂载分区：
+
+``` shell
+mount -t btrfs -o subvol=/@,compress=zstd /dev/sdxn /mnt # 根分区
+mount -t btrfs -o subvol=/@home,compress=zstd /dev/sdxn /mnt/home # home 分区
+mount /dev/sdxn /mnt/boot # EFI 分区
+```
+
+按顺序挂载，如果提示没有挂载点，创建它：
+
+``` shell
+mkdir -p [mount point]
+```
+
+### 安装基础包
+
+使用 `pacstrap` 安装基础包：
+
+``` shell
+pacstrap /mnt base linux linux-firmware btrfs-progs nano
+```
+
+如果你想用其它内核，可以现在就替换。`linux-firmware` 已经被拆分，你可以定制安装。通常来说 `linux-firmware-whence` 是必须的，其它诸如 `linux-firmware-amdgpu` 可以根据需要安装。
+
+### 生成 fstab
+
+生成 `fstab` 文件：
+
+``` shell
+genfstab -U /mnt >> /mnt/etc/fstab
+```
+
+### 切换根目录
+
+切换到新安装的系统：
+
+``` shell
+arch-chroot /mnt
+```
+
+### 设置时区
+
+设置时区：
+
+``` shell
+ln -sf /usr/share/zoneinfo/Region/City /etc/localtime
+hwclock --systohc
+```
+
+### 本地化设置
+编辑 `/etc/locale.gen`，取消需要的语言的注释，你通常需要它们两个：
+
+``` plain
+en_US.UTF-8 UTF-8
+zh_CN.UTF-8 UTF-8
+```
+
+生成语言环境：
+
+``` shell
+locale-gen
+```
+
+创建 `/etc/locale.conf` 文件，添加以下内容：
+
+``` plain
+LANG=en_US.UTF-8
+```
+
+> [!WARNING]
+> 不要在这里设置中文 locale
+
+### 设置密码和添加用户
+
+设置 root 密码：
+
+``` shell
+passwd
+```
+
+添加新用户：
+
+``` shell
+useradd -m -G wheel -s /bin/bash username
+passwd username
+```
+
+> [!NOTE]
+> 出于一些个人经验，我不推荐创建 `homectl` 用户。从错误中恢复 `homectl` 用户非常困难，`systemd` 也承认它有缺陷。 `homectl` 用户没有默认的 UID 和 GID。
+
+### 安装引导加载程序
+
+大多数教程会推荐你用 `grub`，但我更推荐 `systemd-boot`。没有什么原因，但是 `systemd` 已经提供了，为什么不用呢？
+
+安装 `systemd-boot`：
+
+``` shell
+bootctl install
+```
+
+创建引导项：
+
+``` shell
+nano /boot/loader/entries/arch.conf
+```
+
+在文件中添加以下内容：
+
+``` plain
+title   Arch Linux
+linux   /vmlinuz-linux
+initrd  /initramfs-linux.img
+options root=PARTUUID=[UUID] rw
+```
+
+UUID 通常可以使用 `blkid` 获取。
+
+## 完成安装
+退出 `chroot` 环境：
+
+``` shell
+exit
+```
+
+卸载分区：
+
+``` shell
+umount -R /mnt
+```
+
+重启系统：
+
+``` shell
+reboot
+```
+
+移除安装介质。
+
+## 一些后续配置
+
+### 网络配置
+
+我通常用 `systemd-networkd` 和 `systemd-resolved` 来配置网络。只需要启用这两个服务就可以了：
+
+``` shell
+systemctl enable systemd-networkd
+systemctl enable systemd-resolved
+```
+
+创建网络配置文件 `/etc/systemd/network/20-wired.network`：
+
+``` plain
+[Match]
+Name=[DEVICE NAME]
+[Network]
+DHCP=yes
+``` 
+
+链接 `resolv.conf`：
+
+``` shell
+ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
+```
+
+### 安装 sudo
+
+``` shell
+pacman -S sudo
+```
+
+编辑 `/etc/sudoers` 文件，取消注释 `wheel` 用户组的权限：
+
+``` shell
+nano /etc/sudoers
+```
+
+找到并取消注释以下行：
+
+``` plain
+%wheel ALL=(ALL:ALL) ALL
+```
+
+如果你没装 `sudo`, 也可以用 `systemd` 的 `run0`，在体验上没有太大区别。
+
+`run0` 开箱即用。
+
+### DE/WM
+
+大多数教程会推荐 KDE Plasma, 不过我更喜欢 Hyprland. 
+
+当然我是照搬别人的 dotfiles, 如果你也想用，可以看看 [End4](https://ii.clsty.link/)
+
+### 主机名
+
+谁不喜欢 `systemd` 呢？我们用 `hostnamectl` 设置主机名：
+
+``` shell
+hostnamectl set-hostname myarchlinux
+```
+
