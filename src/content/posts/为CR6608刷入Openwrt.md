@@ -6,6 +6,7 @@ tags: [openwrt]
 category: 技术
 draft: false
 ---
+# 为 CR6608 刷入 Openwrt
 
 ### 准备
 
