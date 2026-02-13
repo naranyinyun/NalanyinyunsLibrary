@@ -3,7 +3,7 @@ title: Archlinux 安装指南
 published: 2025-02-13
 tags: [linux]
 category: 技术
-draft: true
+draft: false
 ---
 
 这篇文章会介绍如何安装 Archlinux，以及一些常用的配置方法。
