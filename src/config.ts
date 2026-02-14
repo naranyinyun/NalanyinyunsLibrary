@@ -32,7 +32,7 @@ export const siteConfig: SiteConfig = {
 	favicon: [
 		{
 			src: "/favicon/91950505.png",
-		}
+		},
 		// Leave this array empty to use the default favicon
 		// {
 		//   src: '/favicon/icon.png',    // Path of the favicon, relative to the /public directory
