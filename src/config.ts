@@ -30,6 +30,9 @@ export const siteConfig: SiteConfig = {
 		depth: 2, // Maximum heading depth to show in the table, from 1 to 3
 	},
 	favicon: [
+		{
+			src: "/favicon/91950505.png",
+		}
 		// Leave this array empty to use the default favicon
 		// {
 		//   src: '/favicon/icon.png',    // Path of the favicon, relative to the /public directory
@@ -45,7 +48,7 @@ export const navBarConfig: NavBarConfig = {
 
 export const profileConfig: ProfileConfig = {
 	avatar: "assets/images/91950505.png", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
-	name: "Nalanyinyun",
+	name: "Nalanyinyun(aka 纳兰音韵)",
 	bio: "日傘を差した物静かな天然素材",
 	links: [
 		{
