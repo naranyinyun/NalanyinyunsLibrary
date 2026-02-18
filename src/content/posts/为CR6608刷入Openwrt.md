@@ -1,6 +1,6 @@
 ---
 title: 为 CR6608 刷入 Openwrt
-published: 2025-02-10
+published: 2026-02-10
 description: "本文将介绍如何为 CR6608 刷入 Openwrt，以及一些常见的问题和解决方法。"
 tags: [openwrt]
 category: 技术

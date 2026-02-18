@@ -1,6 +1,6 @@
 ---
 title: Archlinux 安装指南
-published: 2025-02-13
+published: 2026-02-18
 tags: [linux]
 category: 技术
 draft: false
