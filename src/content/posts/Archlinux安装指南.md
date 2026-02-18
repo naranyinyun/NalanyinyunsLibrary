@@ -8,6 +8,10 @@ draft: false
 
 这篇文章会介绍如何安装 Archlinux，以及一些常用的配置方法。
 
+它只针对 UEFI 64 位系统。
+
+本文中提供的，与其他教程有出入的内容，都源自我的个人经验。如果你不喜欢 `systemd`，那咱们可能不太合拍了。
+
 ## 准备工作
 
 ### 制作启动盘
@@ -91,6 +95,12 @@ btrfs subvolume create /mnt/@
 btrfs subvolume create /mnt/@home
 ```
 
+别忘了卸载分区：
+
+``` shell
+umount /mnt
+```
+
 > [!IMPORTANT]
 > `timemshift` 以及很多 `btrfs` 快照工具都需要这种子卷布局，如果你计划使用这类工具，不要创建 `@.snapshots` .
 
@@ -135,8 +145,11 @@ genfstab -U /mnt >> /mnt/etc/fstab
 切换到新安装的系统：
 
 ``` shell
-arch-chroot /mnt
+arch-chroot -S /mnt
 ```
+
+> [!TIP]
+> `-S` Run in systemd mode. This will spawn a transient systemd service via systemd-run(1) and delegates namespace/chroot management to the service manager. （翻译： `-S` 选项会以 systemd 模式运行 `arch-chroot`，这会通过 `systemd-run(1)` 启动一个临时的 systemd 服务，并将命名空间/chroot 管理委托给服务管理器。）
 
 ### 设置时区
 
@@ -148,6 +161,7 @@ hwclock --systohc
 ```
 
 ### 本地化设置
+
 编辑 `/etc/locale.gen`，取消需要的语言的注释，你通常需要它们两个：
 
 ``` plain
@@ -168,7 +182,7 @@ LANG=en_US.UTF-8
 ```
 
 > [!WARNING]
-> 不要在这里设置中文 locale
+> 不要在这里设置中文 locale，除非你想让 tty 变成乱码。
 
 ### 设置密码和添加用户
 
@@ -190,6 +204,10 @@ passwd username
 
 ### 安装引导加载程序
 
+在本小节下的两个小节中，只需要选择一个方法就可以了。
+
+#### 传统的：initramfs + vmlinuz
+
 大多数教程会推荐你用 `grub`，但我更推荐 `systemd-boot`。没有什么原因，但是 `systemd` 已经提供了，为什么不用呢？
 
 安装 `systemd-boot`：
@@ -197,6 +215,9 @@ passwd username
 ``` shell
 bootctl install
 ```
+
+> [!WARNING]
+> 如果你没有使用 `arch-chroot` 的 `-S` 选项，`bootctl` *非常有可能*错误地识别 UEFI 状态，这会导致它不修改你的 UEFI 启动项。当然，用 `efibootmgr` 可以手动修复。
 
 创建引导项：
 
@@ -215,7 +236,62 @@ options root=PARTUUID=[UUID] rw
 
 UUID 通常可以使用 `blkid` 获取。
 
+#### 使用 UKI
+
+安装 `systemd-ukify`：
+
+``` shell
+pacman -S systemd-ukify
+```
+
+编辑 `/etc/mkinitcpio.d/linux.preset`，取消注释这几行，并将`/efi`改为`/boot`，我用 `linux-zen`，修改之后大概是这样的：
+
+```plain
+# mkinitcpio preset file for the 'linux-zen' package
+
+#ALL_config="/etc/mkinitcpio.conf"
+ALL_kver="/boot/vmlinuz-linux-zen"
+#ALL_kerneldest="/boot/vmlinuz-linux-zen"
+
+PRESETS=('default')
+#PRESETS=('default' 'fallback')
+
+#default_config="/etc/mkinitcpio.conf"
+#default_image="/boot/initramfs-linux-zen.img"
+default_uki="/boot/EFI/Linux/arch-linux-zen.efi"
+default_options="--splash /usr/share/systemd/bootctl/splash-arch.bmp"
+
+#fallback_config="/etc/mkinitcpio.conf"
+#fallback_image="/boot/initramfs-linux-zen-fallback.img"
+fallback_uki="/boot/EFI/Linux/arch-linux-zen-fallback.efi"
+fallback_options="-S autodetect"
+```
+
+创建那些目录：
+
+``` shell
+mkdir -p /boot/EFI/Linux
+```
+
+使用 `mkinitcpio` 重新生成：
+
+``` shell
+mkinitcpio -P
+```
+
+安装 `systemd-boot`：
+
+``` shell
+bootctl install
+```
+
+> [!WARNING]
+> 如果你没有使用 `arch-chroot` 的 `-S` 选项，`bootctl` *非常有可能*错误地识别 UEFI 状态，这会导致它不修改你的 UEFI 启动项。当然，用 `efibootmgr` 可以手动修复。
+
+不需要添加 `systemd-boot` 入口，它会自动识别标准路径下的 UKI 和 Windows 引导项（如果你是双系统）。
+
 ## 完成安装
+
 退出 `chroot` 环境：
 
 ``` shell
