@@ -374,3 +374,4 @@ nano /etc/sudoers
 hostnamectl set-hostname myarchlinux
 ```
 
+![image](https://mirrors.nalanyinyun.work/91950505.png)
