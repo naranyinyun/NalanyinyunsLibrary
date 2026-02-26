@@ -23,6 +23,6 @@ u+UQmh577msJghfeCWZrFugD
 -----END PGP PUBLIC KEY BLOCK-----
 ```
 
-用于签署文件的 .sig 文件和源文件都可以在 [GitHub 仓库](https://github.com/naranyinyun/NalanyinyunsLibrary/tree/main/src/content/posts)中获取。
+用于签署文件的 .sig 文件可以在 [GitHub 仓库](https://github.com/naranyinyun/NalanyinyunsLibrary/tree/main/gpg)中获取。
 
 你可能会在 IPFS 节点上或者 Matters 上看见我或者我的内容，我也会在那里发表文章。
