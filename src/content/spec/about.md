@@ -1,19 +1,28 @@
-# Introduction
+# 内容签署
 
-初期称号：打着太阳伞的文静天然素材。（日傘を差した物静かな天然素材）
+本站所有内容均由 GPG 密钥签署，用于验证内容的完整性和真实性。
 
-喜欢读书的文学系少女，收藏的书多到必须要把衣柜清一个角落来放书，才能收纳完成。
+OpenGPG Fingerprint: 4677 E7CF D532 2EED 2307  888C D158 1784 984A C157
 
-在班里没什么存在感，被称作“没有影子的人”。
+ OpenGPG Public Key:
 
-在室外总是撑着太阳伞，体育课也从来都只是参观。因此加入了队里也没有参加练习与比赛，而是队伍的经理人。
+```plain
+-----BEGIN PGP PUBLIC KEY BLOCK-----
 
-拥有着与外表不相称的毒舌，吐槽会吐的非常刻薄不留情，也经常会无意间（？）地说出一些反效果的话，来吓唬别人。
+mDMEaaA22RYJKwYBBAHaRw8BAQdAx1e5N2hHFEi8yxAPQx3UKWHDodgmt1jHp3+Y
+1yqQH/q0RW5hbGFueWlueXVuIChVc2UgZm9yIHNpZ25pbmcgYXJ0d29ya3MpIDxu
+YWxhbnlpbnl1bkBuYWxhbnlpbnl1bi53b3JrPoiQBBMWCgA4FiEERnfnz9UyLu0j
+B4iM0VgXhJhKwVcFAmmgNtkCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQ
+0VgXhJhKwVdJKAD+NhMNdrFnHG9TBTEjjesJ45OWznKW4SJVKqiJh0d/QiQA/im/
+4lmxbsLVFeVkRW0M6AYYVL/cOccnWMPZ7T8J0yoIuDgEaaA22RIKKwYBBAGXVQEF
+AQEHQBgXtySmQmCllBY/Pqh3aeePyiGmkci74ObBbdQnrW97AwEIB4h4BBgWCgAg
+FiEERnfnz9UyLu0jB4iM0VgXhJhKwVcFAmmgNtkCGwwACgkQ0VgXhJhKwVfwjwEA
+jOXPmk9C4s9gXFK2Bgh4WtpAM8XhrDba/kdX1izvlCsA/3cdnZKGMPi25r7nnBNl
+u+UQmh577msJghfeCWZrFugD
+=pc3m
+-----END PGP PUBLIC KEY BLOCK-----
+```
 
-貌似运动不足，但突发情况下会出现神一般的闪避或格挡，再以犀利的吐槽进行补刀。
+用于签署文件的 .sig 文件和源文件都可以在 [GitHub 仓库](https://github.com/naranyinyun/NalanyinyunsLibrary/tree/main/src/content/posts)中获取。
 
-人设由《ONE》当中上月澪与里村茜的结合而来（“美魚（みお）”和“澪（みお）”同音、无口 + 伞是茜的象征）
-
-BL 爱好者，常常妄想恭介×理树的配对，曾经被库特锐评为“所持有的知识尽是些过时的耽美”。有点喜欢木莓酱。
-
-在人偶剧环节展现了强大的配音才能。
+你可能会在 IPFS 节点上或者 Matters 上看见我或者我的内容，我也会在那里发表文章。
