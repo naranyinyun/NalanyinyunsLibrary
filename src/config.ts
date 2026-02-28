@@ -12,12 +12,12 @@ export const siteConfig: SiteConfig = {
 	subtitle: "Collections of artworks and blogs",
 	lang: "zh_CN", // Language code, e.g. 'en', 'zh_CN', 'ja', etc.
 	themeColor: {
-		hue: 35, // Default hue for the theme color, from 0 to 360. e.g. red: 0, teal: 200, cyan: 250, pink: 345
+		hue: 160, // Default hue for the theme color, from 0 to 360. e.g. red: 0, teal: 200, cyan: 250, pink: 345
 		fixed: true, // Hide the theme color picker for visitors
 	},
 	banner: {
 		enable: true,
-		src: "assets/images/119683453_p2.jpg", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
+		src: "assets/images/109862500_p0-木々の階段.jpg", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
 		position: "top", // Equivalent to object-position, only supports 'top', 'center', 'bottom'. 'center' by default
 		credit: {
 			enable: false, // Display the credit text of the banner image
@@ -48,7 +48,7 @@ export const navBarConfig: NavBarConfig = {
 
 export const profileConfig: ProfileConfig = {
 	avatar: "assets/images/91950505.png", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
-	name: "Nalanyinyun(aka 纳兰音韵)",
+	name: "Nalanyinyun",
 	bio: "日傘を差した物静かな天然素材",
 	links: [
 		{
@@ -60,6 +60,11 @@ export const profileConfig: ProfileConfig = {
 			name: "GitHub",
 			icon: "fa6-brands:github",
 			url: "https://github.com/naranyinyun",
+		},
+		{
+			name: "Matters",
+			icon: "fa6-solid:pen",
+			url: "https://matters.town/@nalanyinyun",
 		},
 	],
 };
