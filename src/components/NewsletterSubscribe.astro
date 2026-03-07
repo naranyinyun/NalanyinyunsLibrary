@@ -1,0 +1,103 @@
+<div class="transition w-full max-w-xl mb-6">
+	<p class="text-sm text-black/70 dark:text-white/70 mb-2 text-center">
+		订阅我们的邮件列表，第一时间获取新内容，由 Resend 驱动
+	</p>
+	<form data-newsletter-form class="flex flex-col sm:flex-row gap-2">
+		<label class="sr-only" for="newsletter-email">Email</label>
+		<input
+			id="newsletter-email"
+			name="email"
+			type="email"
+			required
+			autocomplete="email"
+			placeholder="you@example.com"
+			class="w-full rounded-xl border border-black/10 dark:border-white/15 bg-white/70 dark:bg-black/20 px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-[var(--primary)]"
+		/>
+		<button
+			type="submit"
+			class="rounded-xl px-4 py-2 text-sm font-medium bg-[var(--primary)] text-white hover:opacity-90 active:scale-[0.98] transition"
+		>
+			Subscribe
+		</button>
+	</form>
+	<p data-newsletter-message class="text-xs mt-2 min-h-4 text-center"></p>
+</div>
+
+<script>
+	function bindNewsletterForms() {
+		const forms = document.querySelectorAll("[data-newsletter-form]");
+		for (const form of forms) {
+			if (!(form instanceof HTMLFormElement) || form.dataset.bound === "true") {
+				continue;
+			}
+
+			form.dataset.bound = "true";
+			const message = form.parentElement?.querySelector("[data-newsletter-message]");
+
+			form.addEventListener("submit", async (event) => {
+				event.preventDefault();
+				const emailField = form.elements.namedItem("email");
+				if (!(emailField instanceof HTMLInputElement)) {
+					return;
+				}
+
+				const submitButton = form.querySelector('button[type="submit"]');
+				if (submitButton instanceof HTMLButtonElement) {
+					submitButton.disabled = true;
+					submitButton.textContent = "提交中...";
+				}
+
+				if (message instanceof HTMLElement) {
+					message.textContent = "正在提交...";
+					message.className = "text-xs mt-2 min-h-4 text-center text-black/60 dark:text-white/60";
+				}
+
+				try {
+					const response = await fetch("/api/subscribe/", {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+							Accept: "application/json",
+						},
+						body: JSON.stringify({
+							email: emailField.value,
+						}),
+					});
+
+					const responseType = response.headers.get("content-type") || "";
+					const result = responseType.includes("application/json")
+						? ((await response.json()) as {
+								ok?: boolean;
+								message?: string;
+								error?: string;
+							})
+						: { ok: false, error: await response.text() };
+
+					if (!response.ok || !result.ok) {
+						throw new Error(result.error || "订阅失败，请稍后重试。");
+					}
+
+					emailField.value = "";
+					if (message instanceof HTMLElement) {
+						message.textContent = "订阅成功，后续新文章会邮件通知你。";
+						message.className = "text-xs mt-2 min-h-4 text-center text-emerald-600 dark:text-emerald-400";
+					}
+				} catch (error) {
+					if (message instanceof HTMLElement) {
+						message.textContent =
+							error instanceof Error ? error.message : "订阅失败，请稍后重试。";
+						message.className = "text-xs mt-2 min-h-4 text-center text-red-600 dark:text-red-400";
+					}
+				} finally {
+					if (submitButton instanceof HTMLButtonElement) {
+						submitButton.disabled = false;
+						submitButton.textContent = "订阅";
+					}
+				}
+			});
+		}
+	}
+
+	bindNewsletterForms();
+	document.addEventListener("astro:page-load", bindNewsletterForms);
+</script>
