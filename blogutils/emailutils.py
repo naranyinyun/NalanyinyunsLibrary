@@ -21,7 +21,7 @@ def generateEmailContent(rss):
     description = first.findtext("description", default="No description.")
     pubDate = first.findtext("pubDate", default="Unknown date")
     formatted_str = (
-        f"<div style='font-family: sans-serif; white-space: pre-wrap;'>"
+        f"<div style='white-space: pre-wrap; font-family: sans-serif;'>"
         f"Nalanyinyun's Library 已更新，以下是摘要：\n\n"
         f"Title: {title}\n"
         f"Date: {pubDate}\n"
