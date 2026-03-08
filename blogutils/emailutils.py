@@ -44,7 +44,7 @@ def generateEmailContent(rss):
         f"Date: {pubDate}\n"
         f"{'-'*20}\n"
         f"Description: {description}"
-        f"退订见：{{{ resend_unsubscribe_url }}}"
+        f"退订见：{{{{{{ resend_unsubscribe_url }}}}}}"
     )
     return formatted_str
 
