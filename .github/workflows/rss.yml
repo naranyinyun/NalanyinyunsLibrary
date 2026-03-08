@@ -1,0 +1,30 @@
+name: RSS to Email on File Change
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - src/content/posts/**
+      - blogutils/emailutils.py
+  workflow_dispatch:
+
+jobs:
+  email_notification:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install Dependencies
+        run: pip install requests resend
+
+      - name: Run Script
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+        run: python blogutils/emailutils.py
