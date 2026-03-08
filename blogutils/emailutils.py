@@ -41,7 +41,7 @@ def publishLatest(apiKey, segmentID, fromID, subject, content):
         "segment_id": segmentID,
         "from": fromID,
         "subject": subject,
-        "text": content
+        "html": content
     })
 
 url = "https://nalanyinyun.work/rss.xml" 
