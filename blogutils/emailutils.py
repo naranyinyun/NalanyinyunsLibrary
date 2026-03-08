@@ -10,7 +10,6 @@ def getRss(url):
     response.raise_for_status()
     return response.text
 
-
 def generateEmailContent(rss):
     root = ET.fromstring(rss)
     items = root.findall("./channel/item")
@@ -21,30 +20,15 @@ def generateEmailContent(rss):
     title = first.findtext("title", default="Untitled")
     description = first.findtext("description", default="No description.")
     pubDate = first.findtext("pubDate", default="Unknown date")
-    return {
-        "TITLE": title,
-        "DESCRIPTION": description,
-        "PUBDATE": pubDate
-    }
-
-def generateEmailContent(rss):
-    root = ET.fromstring(rss)
-    items = root.findall("./channel/item")
-    if not items:
-        return "No posts found in RSS feed."
-
-    first = items[0]
-    title = first.findtext("title", default="Untitled")
-    description = first.findtext("description", default="No description.")
-    pubDate = first.findtext("pubDate", default="Unknown date")
-    
     formatted_str = (
+        f"<div style='font-family: sans-serif; white-space: pre-wrap;'>"
         f"Nalanyinyun's Library 已更新，以下是摘要：\n\n"
         f"Title: {title}\n"
         f"Date: {pubDate}\n"
         f"{'-'*20}\n"
-        f"Description: {description}"
-        f"退订见：{{{{{{ resend_unsubscribe_url }}}}}}"
+        f"Description: {description}\n\n"
+        f"退订见：<a href=\"{{{{{{ resend_unsubscribe_url }}}}}}\">点击此处退订</a>"
+        f"</div>"
     )
     return formatted_str
 
