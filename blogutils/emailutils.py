@@ -39,10 +39,12 @@ def generateEmailContent(rss):
     pubDate = first.findtext("pubDate", default="Unknown date")
     
     formatted_str = (
+        f"Nalanyinyun's Library 已更新，以下是摘要：\n\n"
         f"Title: {title}\n"
         f"Date: {pubDate}\n"
         f"{'-'*20}\n"
-        f"{description}"
+        f"Description: {description}"
+        f"退订见：{{{ resend_unsubscribe_url }}}"
     )
     return formatted_str
 

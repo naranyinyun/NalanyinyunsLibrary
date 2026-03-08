@@ -6,7 +6,6 @@ on:
       - main
     paths:
       - src/content/posts/**
-      - blogutils/emailutils.py
   workflow_dispatch:
 
 jobs:
