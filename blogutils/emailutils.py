@@ -6,7 +6,10 @@ import os
 
 
 def getRss(url):
-    response = requests.get(url, timeout=15)
+    headers = {
+        "User-Agent": "Nalanyinyun RSS and email service/1.0, +https://nalanyinyun.work"
+    }
+    response = requests.get(url, headers=headers, timeout=15)
     response.raise_for_status()
     return response.text
 
@@ -32,8 +35,6 @@ def generateEmailContent(rss):
     )
     return formatted_str
 
-url =  "https://nalanyinyun.work/rss.xml" 
-content = generateEmailContent(getRss(url))
 
 def publishLatest(apiKey, segmentID, fromID, subject, content):
     resend.api_key = apiKey
@@ -42,8 +43,13 @@ def publishLatest(apiKey, segmentID, fromID, subject, content):
         "from": fromID,
         "subject": subject,
         "html": content,
+        "headers": {
+            "List-Unsubscribe": "<{{{{ resend_unsubscribe_url }}}}>",
+            "List-Unsubscribe-Post": "List-Unsubscribe=One-Click"
+        },
         "send": True
     })
+
 
 url = "https://nalanyinyun.work/rss.xml" 
 content = generateEmailContent(getRss(url))
