@@ -1,6 +1,7 @@
 ---
 title: 利用 Resend 和 Workers 零成本实现电子邮件订阅
 published: 2026-03-10
+description: 利用 Resend，Workers，GitHub Action 和 Tally 搭建一个全自动的邮件订阅系统
 tags: [blog]
 category: 技术
 draft: false
