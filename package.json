@@ -62,8 +62,7 @@
 		"svelte": "^5.53.10",
 		"tailwindcss": "^3.4.19",
 		"typescript": "^5.9.3",
-		"unist-util-visit": "^5.0.0",
-		"vercel": "^50.29.0"
+		"unist-util-visit": "^5.0.0"
 	},
 	"devDependencies": {
 		"@astrojs/ts-plugin": "^1.10.7",
