@@ -13,4 +13,16 @@
 
 改一下这个[文件](https://github.com/naranyinyun/NalanyinyunsLibrary/blob/main/src/_data/friends.json)再 PR 就行啦，我都会亲自看的。
 
+# 本站信息
+
+> 网站名称：NalanyinyunsLibrary  
+> 网站链接：nalanyinyun.work  
+> 网站简介：太阳伞下天然文静素材  
+
+如果你需要 Avatar，可以从这里获取：
+
+![nalanyinyun](https://mirrors.nalanyinyun.work/91950505.png)
+
+此图像由 Cloudflare R2 托管，带有 referrer 验证，请勿直接使用。
+
 ::github{repo="naranyinyun/NalanyinyunsLibrary"}
