@@ -109,23 +109,27 @@ export default defineConfig({
 		AstroPWA({
 			registerType: "autoUpdate",
 			manifest: {
+				id: "/",
+				orientation: "any",
 				name: "Nalanyinyun's Library",
 				short_name: "NaLib",
 				description: "Nalanyinyun's Library",
 				theme_color: "#ffffff",
 				background_color: "#ffffff",
 				display: "standalone",
-				start_url: "/",
+				start_url: "/index.html",
 				icons: [
 					{
 						src: "/favicon/192.png",
 						sizes: "192x192",
 						type: "image/png",
+						purpose: "any maskable"
 					},
 					{
 						src: "/favicon/512.png",
 						sizes: "512x512",
 						type: "image/png",
+						purpose: "any maskable"
 					},
 				],
 			},
