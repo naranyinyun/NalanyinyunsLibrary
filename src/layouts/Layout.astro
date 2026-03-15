@@ -22,8 +22,6 @@ import type { Favicon } from "../types/config";
 import { pathsEqual, url } from "../utils/url-utils";
 import "katex/dist/katex.css";
 
-import 'virtual:pwa-register';
-
 interface Props {
 	title?: string;
 	banner?: string;
@@ -570,4 +568,18 @@ if (window.swup) {
 } else {
 	document.addEventListener("swup:enable", setup)
 }
+</script>
+
+<head>
+    <link rel="manifest" href="/manifest.webmanifest" />
+    
+    <meta name="theme-color" content="#ffffff" />
+</head>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js');
+    });
+  }
 </script>
