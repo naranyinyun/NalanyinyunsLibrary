@@ -107,6 +107,7 @@ export default defineConfig({
 		svelte(),
 		sitemap(),
 		AstroPWA({
+			manifestFilename: "manifest.json",
 			registerType: "autoUpdate",
 			manifest: {
 			name: "Nalanyinyun's Library",
