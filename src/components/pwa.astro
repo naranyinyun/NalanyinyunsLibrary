@@ -1,0 +1,15 @@
+---
+const isClient = typeof window !== 'undefined';
+if (isClient) {
+  const { registerSW } = await import('virtual:pwa-register');
+  registerSW({
+    immediate: true,
+    onNeedRefresh() {
+      console.log('New content available, click to refresh.');
+    },
+    onOfflineReady() {
+      console.log('App ready to work offline');
+    },
+  });
+}
+---
