@@ -79,6 +79,9 @@ const bannerOffset =
 	  data-overlayscrollbars-initialize
 >
 	<head>
+		<link rel="manifest" href="/manifest.webmanifest" />
+    	<meta name="theme-color" content="#ffffff" />
+
 
 		<title>{pageTitle}</title>
 
@@ -569,12 +572,6 @@ if (window.swup) {
 	document.addEventListener("swup:enable", setup)
 }
 </script>
-
-<head>
-    <link rel="manifest" href="/manifest.webmanifest" />
-    
-    <meta name="theme-color" content="#ffffff" />
-</head>
 
 <script>
   if ('serviceWorker' in navigator) {

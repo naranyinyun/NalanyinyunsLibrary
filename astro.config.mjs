@@ -134,8 +134,10 @@ export default defineConfig({
 				],
 			},
 			workbox: {
+				clientsClaim: true,
+				skipWaiting: true,
 				navigateFallback: "/",
-				globPatterns: ["**/*.{js,css,html,png,svg,ico}"],
+				globPatterns: ["**/*.{js,css,html,png,svg,ico,jpg}"],
 			},
 		}),
 	],

@@ -17,12 +17,12 @@ export const siteConfig: SiteConfig = {
 	},
 	banner: {
 		enable: true,
-		src: "assets/images/109862500_p0-木々の階段.jpg", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
+		src: "assets/images/90375966.jpg", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
 		position: "top", // Equivalent to object-position, only supports 'top', 'center', 'bottom'. 'center' by default
 		credit: {
-			enable: false, // Display the credit text of the banner image
-			text: "", // Credit text to be displayed
-			url: "", // (Optional) URL link to the original artwork or artist's page
+			enable: true, // Display the credit text of the banner image
+			text: "私に誓って", // Credit text to be displayed
+			url: "https://www.pixiv.net/artworks/90375966", // (Optional) URL link to the original artwork or artist's page
 		},
 	},
 	toc: {
