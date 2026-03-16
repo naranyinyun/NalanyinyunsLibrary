@@ -19,6 +19,37 @@ const currentYear = new Date().getFullYear();
         <a class="transition link text-[var(--primary)] font-medium" target="_blank" href="https://vercel.com/">Vercel</a> ·
         <a class="transition link text-[var(--primary)] font-medium" target="_blank" href="https://cloudflare.com/">Cloudflare</a>
         <br>
-        <a class="transition link text-[var(--primary)] font-medium" target="_blank" href="https://tally.so/r/D41zvq">Email Subscriptions</a>
+        <a class="transition link text-[var(--primary)] font-medium" target="_blank" href="https://tally.so/r/D41zvq">Email Subscription</a> 
+        <button
+          class="transition link text-[var(--primary)] font-medium hidden"
+          type="button"
+          id="pwa-install-button">
+          ·Install App
+        </button>
     </div>
 </div>
+
+<script is:inline>
+(() => {
+  const button = document.getElementById("pwa-install-button");
+  if (!button) return;
+
+  let deferredPrompt = null;
+
+  window.addEventListener("beforeinstallprompt", (event) => {
+    event.preventDefault();
+    deferredPrompt = event;
+    button.classList.remove("hidden");
+  });
+
+  button.addEventListener("click", async () => {
+    if (!deferredPrompt) return;
+
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+
+    deferredPrompt = null;
+    button.classList.add("hidden");
+  });
+})();
+</script>
