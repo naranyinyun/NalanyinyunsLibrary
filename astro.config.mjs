@@ -25,6 +25,7 @@ import { parseDirectiveNode } from "./src/plugins/remark-directive-rehype.js";
 import { remarkExcerpt } from "./src/plugins/remark-excerpt.js";
 import { remarkReadingTime } from "./src/plugins/remark-reading-time.mjs";
 import AstroPWA from "@vite-pwa/astro";
+import pagefind from "astro-pagefind";
 
 
 // https://astro.build/config
@@ -106,6 +107,7 @@ export default defineConfig({
 		}),
 		svelte(),
 		sitemap(),
+		pagefind(),
 		AstroPWA({
 			registerType: "autoUpdate",
 			manifest: {
