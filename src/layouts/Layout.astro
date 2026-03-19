@@ -572,11 +572,3 @@ if (window.swup) {
 	document.addEventListener("swup:enable", setup)
 }
 </script>
-
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js');
-    });
-  }
-</script>
