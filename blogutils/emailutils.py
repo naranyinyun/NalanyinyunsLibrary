@@ -43,10 +43,6 @@ def publishLatest(apiKey, segmentID, fromID, subject, content):
         "from": fromID,
         "subject": subject,
         "html": content,
-        "headers": {
-            "List-Unsubscribe": "<{{{{ resend_unsubscribe_url }}}}>",
-            "List-Unsubscribe-Post": "List-Unsubscribe=One-Click"
-        },
         "send": True
     })
 
