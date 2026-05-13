@@ -41,7 +41,7 @@
 		"astro-icon": "^1.1.5",
 		"astro-pagefind": "^1.8.6",
 		"hastscript": "^9.0.1",
-		"katex": "^0.16.45",
+		"katex": "^0.16.46",
 		"markdown-it": "^14.1.1",
 		"mdast-util-to-string": "^4.0.0",
 		"overlayscrollbars": "^2.16.0",
@@ -57,7 +57,7 @@
 		"remark-github-admonitions-to-directives": "^1.0.5",
 		"remark-math": "^6.0.0",
 		"remark-sectionize": "^2.1.0",
-		"sanitize-html": "^2.17.3",
+		"sanitize-html": "^2.17.4",
 		"sharp": "^0.34.5",
 		"stylus": "^0.64.0",
 		"svelte": "^5.55.5",
@@ -66,7 +66,7 @@
 		"unist-util-visit": "^5.0.0"
 	},
 	"devDependencies": {
-		"@astrojs/ts-plugin": "^1.10.7",
+		"@astrojs/ts-plugin": "^1.10.8",
 		"@biomejs/biome": "2.4.15",
 		"@rollup/plugin-yaml": "^4.1.2",
 		"@types/hast": "^3.0.4",
