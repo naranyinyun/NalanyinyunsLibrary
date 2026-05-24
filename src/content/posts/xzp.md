@@ -1,0 +1,634 @@
+---
+title: 来自九年前的远古音频兵器 - Xperia XZ Premium
+published: 2026-05-24
+description: "从 Android 音频链路中一睹当年顶级旗舰的音频风采"
+tags: [android]
+category: 技术
+draft: false
+---
+
+## 前言
+
+Android 设备的音频质量，一直是一个被人们津津乐道的话题。从早年的低质量 AudioFlinger 强制重采样和低精度音频衰减，到现如今的专用 AAudio 高性能输出。但因为 SoC 制造商和 OEM 仍然对 HAL 有较大的自定义能力，不同设备上的音频质量区别仍旧非常巨大。比如联发科的某些设备会将 audioeffect 集成进 vendor 挂载在 AudioFlinger 上而无法关闭，高通设备的 Direct HD 可以在受支持的设备上绕过 effect chain 输出原始音频。
+
+换句话说，Android 早已具备高质量音频输出的能力，但真正愿意保留声音原貌的厂商，却越来越少了。现在更流行的做法，则是先将所有音频统一送入 mixer 与 DSP 处理链路，再进行输出，在这里进行处理之后再输出。所谓的处理，大多是一些所谓的杜比音效，响度均衡，系统 EQ 甚至 OEM 音效。初衷确实是为了提升用户体验，但为此强行放弃了高保真音频，真的值得吗？
+
+正巧在几个月前，我购入了一台银色镜面的 Sony Xperia XZ Premium。也正是从那时开始，我重新开始思考 Android 的声音到底应该是什么样子。
+
+## 一睹机皇的风采：硬件配置
+
+XZP 搭载了高通 msm8998 SoC，也就是高通骁龙 835。它的硬件基础或许算不上优秀，它没有专用的 DAC，而是使用了高通 Aqstic™ WCD9335 作为 DAC。
+
+这颗 DAC 本身支持的最高音频规格来到了 32bit/384 KHz (PCM) 。支持 DSD64/128、FLAC、ALAC、LPCM 等常见的无损格式。
+
+如果你对硬件感兴趣，这是一些来自其它网站的数据：
+
+| 测试项目 | 44.1kHz | 48kHz | 96kHz | Z3 |
+|---|---:|---:|---:|---:|
+| 噪声水平，dB (A) | -96.0 | -96.7 | -100.5 | -86.6 |
+| 动态范围，dB (A) | 95.8 | 96.6 | 105.1 | 86.5 |
+| 总谐波失真，% | 0.0016 | 0.0069 | 0.0067 | 0.012 |
+| 互调失真，% | 0.0055 | 0.0050 | 0.0023 | 0.019 |
+| 立体声分离度，dB | -90.0 | -90.3 | -88.5 | -86.4 |
+
+上述数据以及更详细的硬件测试，见 [Soomal](https://soomal.cc/posts/10100007321/)，我并不是太懂这方面，所以不说太多了，本文重点也不在此。
+
+## DIRECT 和 MIXER：把原始音频送进 HAL
+
+这里测试了三 (四) 种不同的播放器，分别是：
+
+- Apple Music（集成解码器）
+- Sony Music（MediaFramework）
+- Poweramp（集成 FFmpeg）
+- Sony Music Center（Exclusive）
+
+经过对比，发现输出类型大概可以分为四类：
+
+- MIXER
+- DIRECT，经过了索尼的 effectchain
+- DIRECT，高通 DIRECT HD，跳过了 effect chain
+- OFFLOAD，非 PCM 且支持的格式会被直接送进 DSP
+
+这是来自 `audio_output_policy.conf` 的原始信息：
+
+```plain
+outputs {
+  default {
+    flags AUDIO_OUTPUT_FLAG_PRIMARY
+    formats AUDIO_FORMAT_PCM_16_BIT
+    sampling_rates 48000
+    bit_width 16
+    app_type 69937
+  }
+  proaudio {
+    flags AUDIO_OUTPUT_FLAG_FAST|AUDIO_OUTPUT_FLAG_RAW
+    formats AUDIO_FORMAT_PCM_16_BIT
+    sampling_rates 48000
+    bit_width 16
+    app_type 69943
+  }
+  deep_buffer {
+    flags AUDIO_OUTPUT_FLAG_DEEP_BUFFER
+    formats AUDIO_FORMAT_PCM_16_BIT
+    sampling_rates 48000
+    bit_width 16
+    app_type 69936
+  }
+  direct_pcm_16 {
+    flags AUDIO_OUTPUT_FLAG_DIRECT
+    formats AUDIO_FORMAT_PCM_16_BIT|AUDIO_FORMAT_PCM_24_BIT_PACKED|AUDIO_FORMAT_PCM_8_24_BIT|AUDIO_FORMAT_PCM_32_BIT
+    sampling_rates 44100|48000|88200|96000|176400|192000
+    bit_width 16
+    app_type 69936
+  }
+  direct_pcm_24 {
+    flags AUDIO_OUTPUT_FLAG_DIRECT
+    formats AUDIO_FORMAT_PCM_24_BIT_PACKED|AUDIO_FORMAT_PCM_8_24_BIT|AUDIO_FORMAT_PCM_32_BIT
+    sampling_rates 44100|48000|88200|96000|176400|192000|352800|384000
+    bit_width 24
+    app_type 69940
+  }
+  direct_pcm_32 {
+    flags AUDIO_OUTPUT_FLAG_DIRECT
+    formats AUDIO_FORMAT_PCM_32_BIT
+    sampling_rates 44100|48000|88200|96000|176400|192000|352800|384000
+    bit_width 32
+    app_type 69942
+  }
+  compress_passthrough {
+    flags AUDIO_OUTPUT_FLAG_DIRECT|AUDIO_OUTPUT_FLAG_COMPRESS_OFFLOAD|AUDIO_OUTPUT_FLAG_NON_BLOCKING|AUDIO_OUTPUT_FLAG_COMPRESS_PASSTHROUGH
+    formats AUDIO_FORMAT_AC3|AUDIO_FORMAT_E_AC3|AUDIO_FORMAT_E_AC3_JOC|AUDIO_FORMAT_DTS|AUDIO_FORMAT_DTS_HD|AUDIO_FORMAT_DSD
+    sampling_rates 32000|44100|48000|88200|96000|176400|192000|352800
+    bit_width 16
+    app_type 69941
+  }
+  compress_offload_16 {
+    flags AUDIO_OUTPUT_FLAG_DIRECT|AUDIO_OUTPUT_FLAG_COMPRESS_OFFLOAD|AUDIO_OUTPUT_FLAG_NON_BLOCKING
+    formats AUDIO_FORMAT_MP3|AUDIO_FORMAT_PCM_16_BIT_OFFLOAD|AUDIO_FORMAT_PCM_24_BIT_OFFLOAD|AUDIO_FORMAT_FLAC|AUDIO_FORMAT_ALAC|AUDIO_FORMAT_APE|AUDIO_FORMAT_AAC_LC|AUDIO_FORMAT_AAC_HE_V1|AUDIO_FORMAT_AAC_HE_V2|AUDIO_FORMAT_WMA|AUDIO_FORMAT_WMA_PRO|AUDIO_FORMAT_VORBIS|AUDIO_FORMAT_AAC_ADTS_LC|AUDIO_FORMAT_AAC_ADTS_HE_V1|AUDIO_FORMAT_AAC_ADTS_HE_V2
+    sampling_rates 44100|48000|88200|96000|176400|192000
+    bit_width 16
+    app_type 69936
+  }
+  compress_offload_24 {
+    flags AUDIO_OUTPUT_FLAG_DIRECT|AUDIO_OUTPUT_FLAG_COMPRESS_OFFLOAD|AUDIO_OUTPUT_FLAG_NON_BLOCKING
+    formats AUDIO_FORMAT_PCM_24_BIT_OFFLOAD|AUDIO_FORMAT_FLAC|AUDIO_FORMAT_ALAC|AUDIO_FORMAT_APE|AUDIO_FORMAT_VORBIS|AUDIO_FORMAT_WMA|AUDIO_FORMAT_WMA_PRO
+    sampling_rates 44100|48000|88200|96000|176400|192000
+    bit_width 24
+    app_type 69940
+  }
+}
+```
+
+## MIXER：普通应用的输出方式
+
+对于一般的应用输出音频，无论音频规格有多高，输出线程通常都是 MIXER（type 0），来看一个例子：
+
+``` plain
+output thread 0xf3603f40, name AudioOut_D, tid 1218, type 0 (MIXER):
+  I/O handle: 13
+  Standby: no
+  Sample rate: 48000 Hz
+  HAL frame count: 192
+  HAL format: 0x1 (AUDIO_FORMAT_PCM_16_BIT)
+  HAL buffer size: 768 bytes
+  Channel count: 2
+  Channel mask: 0x00000003 (front-left, front-right)
+  Processing format: 0x5 (AUDIO_FORMAT_PCM_FLOAT)
+  Processing frame size: 8 bytes
+  Pending config events: none
+  Output device: 0x2 (AUDIO_DEVICE_OUT_SPEAKER)
+  Input device: 0 (AUDIO_DEVICE_NONE)
+  Audio source: 0 (default)
+  Normal frame count: 960
+  Last write occurred (msecs): 14
+  Total writes: 40169
+  Delayed writes: 0
+  Blocked in write: no
+  Suspend count: 0
+  Sink buffer : 0xf38c0000
+  Mixer buffer: 0xf38b6000
+  Effect buffer: 0xf38be000
+  Fast track availMask=0xf8
+  Standby delay ns=3000000000
+  AudioStreamOut: 0xf48ac6b8 flags 0x6 (AUDIO_OUTPUT_FLAG_PRIMARY|AUDIO_OUTPUT_FLAG_FAST)
+  Frames written: 38562240
+  Suspended frames: 0
+  PipeSink frames written: 38562240
+  Hal stream dump:
+  Thread throttle time (msecs): 0
+  AudioMixer tracks: 1 
+  Master mono: off
+```
+
+在该设备的 MIXER 输出线程中，所有进入该混音路径的音频都最终会被转换为 48 kHz / PCM 16-bit 输出格式，此类行为和输出设备类型无关。
+
+```plain
+1 Effect Chains
+    1 effects for session 6953
+	In buffer    Out buffer                 Active tracks:
+	0xf717e000   0xf7182000 -> 0xf35e7000   0
+	Effect ID 971:
+		Session Status State Engine:
+		06953   000    003   0xf489a1d0
+		Descriptor:
+		- UUID: af8da7e0-2ca1-11e3-b71d-0002a5d5c51b
+		- TYPE: ec7178ec-e5e1-4432-a3f4-4657e6795210
+		- apiVersion: F38B4040
+		- flags: 00400240 (conn. mode: insert, insert pref: any, volume mgmt: implements control, device indication: requires updates, input mode: not set, output mode: not set, offloadable)
+		- name: Sonysweffect
+		- implementor: SONY
+		- data: float
+		- Input configuration:
+			Buffer     Frames  Smp rate Channels Format
+			0xf717e000 01920   48000    00000003      5 (AUDIO_FORMAT_PCM_FLOAT)
+		- Output configuration:
+			Buffer     Frames  Smp rate Channels Format
+			0xf7182000 01920   48000    00000003      5 (AUDIO_FORMAT_PCM_FLOAT)
+		- HAL buffers:
+			In(0xf717e000) InConversion(nullptr) Out(0xf7182000 -> 0xf35e7000) OutConversion(nullptr)
+		1 Clients:
+			 Pid Priority Ctrl Locked client server
+			17347        0  yes    yes      0      0
+SonySWEffect
+	EffectsSt: DN VPT CPSP CAPLUS ALC 
+	WrapSt: ACTIVE 
+	SupOnDev: DN CA CPSP XLOUD ALC 
+	VPT mode: 0
+	In Fmt: 0x5
+	Out Fmt: 0x5
+	In SR: 48000 Hz
+	Out SR: 48000 Hz
+	Cur Dev: 0x2
+	Cur LeftVol: 4096
+	Cur RightVol: 4096
+```
+
+AudioFlinger 在 mixer 阶段统一完成多路音频的混合与处理，并在写入 HAL 之前进行格式转换。因此对于 MIXER 路径的输出而言，最终进入硬件层的音频格式固定为 48 kHz / 16-bit PCM。无论原始音频文件质量如何，都会被处理之后送入 HAL. 通过 AAudio 输出的音频也会进入这个路径。
+
+在 effect chain 部分，可以观察到 Sony 的 audio effect 已经被挂载到当前 session，但 Active tracks 显示为 0，说明该 effect 当前并未绑定到任何正在播放的音频流。
+
+这也意味着包括 DSEE、ClearAudio+ 等处理效果，在非白名单应用下并不会被激活。（推测）
+
+实测的听感也符合上述结论和推测。
+
+## DIRECT with effect chain：DIRECT 也有音效处理
+
+索尼自己的索尼音乐会走这个奇怪的路径。
+
+```plain
+Output thread 0xef375000, name AudioOut_4F5, tid 24237, type 1 (DIRECT):
+  I/O handle: 1269
+  Standby: no
+  Sample rate: 96000 Hz
+  HAL frame count: 7680
+  HAL format: 0x6 (AUDIO_FORMAT_PCM_24_BIT_PACKED)
+  HAL buffer size: 46080 bytes
+  Channel count: 2
+  Channel mask: 0x00000003 (front-left, front-right)
+  Processing format: 0x6 (AUDIO_FORMAT_PCM_24_BIT_PACKED)
+  Processing frame size: 6 bytes
+  Pending config events: none
+  Output device: 0x8 (AUDIO_DEVICE_OUT_WIRED_HEADPHONE)
+  Input device: 0 (AUDIO_DEVICE_NONE)
+  Audio source: 0 (default)
+  Normal frame count: 7680
+  Last write occurred (msecs): 72
+  Total writes: 55
+  Delayed writes: 0
+  Blocked in write: yes
+  Suspend count: 0
+  Sink buffer : 0xefdd3000
+  Mixer buffer: 0xefdb4000
+  Effect buffer: 0xefc62000
+  Fast track availMask=0xfe
+  Standby delay ns=1000000000
+  AudioStreamOut: 0xefd836b8 flags 0x1 (AUDIO_OUTPUT_FLAG_DIRECT)
+  Frames written: 422400
+  Suspended frames: 0
+```
+
+可以观察到 AUDIO_OUTPUT_FLAG_DIRECT FLAG. DIRECT 路径下，音频不再进入 mixer 进行统一重采样与位深转换，而是直接按输出 profile 以高分辨率 PCM 写入 HAL。
+
+```plain
+Dsee 0xf186fa00:
+ DsxParam:
+   -Sample rate: 44100 -Codec: -1 -Average bitrate: -1
+ Mode: disable
+  Sample rate: 44100
+  Format: 0x1 (pcm16)
+  Fragment size: 14208
+
+HAL_Volume
+  Volume_l: 1.00000000
+  Volume_r: 1.00000000
+  Stream volumes in dB: 0:-17, 1:-26, 2:-26, 3:-26, 4:-26, 5:-26, 6:-inf, 7:-26, 8:-18, 9:-96, 10:0, 11:0, 12:0
+  Normal mixer raw underrun counters: partial=0 empty=0
+  1 Tracks of which 1 are active
+    T Name Active Client Session S  Flags   Format Chn mask  SRate ST  L dB  R dB  VS dB   Server FrmCnt  FrmRdy F Underruns  Flushed Main Buf  Aux Buf
+         0    yes  23947    7249 A  0x000 00000001 00000003  44100  3     0     0     0  0002C3A0  22932   19380 A         0        0 EF31C000 00000000
+  1 Effect Chains
+    1 effects for session 7249
+	In buffer               Out buffer                 Active tracks:
+	0xef31c000 -> 0xf70f4000   0xf70f4000 -> 0xef31c000   1
+	Effect ID 1075:
+		Session Status State Engine:
+		07249   000    003   0xf3d858a0
+		Descriptor:
+		- UUID: af8da7e0-2ca1-11e3-b71d-0002a5d5c51b
+		- TYPE: ec7178ec-e5e1-4432-a3f4-4657e6795210
+		- apiVersion: F3DCD940
+		- flags: 00400240 (conn. mode: insert, insert pref: any, volume mgmt: implements control, device indication: requires updates, input mode: not set, output mode: not set, offloadable)
+		- name: Sonysweffect
+		- implementor: SONY
+		- data: float
+		- Input configuration:
+			Buffer     Frames  Smp rate Channels Format
+			0xf70f4000 03552   44100    00000003      5 (AUDIO_FORMAT_PCM_FLOAT)
+		- Output configuration:
+			Buffer     Frames  Smp rate Channels Format
+			0xf70f4000 03552   44100    00000003      5 (AUDIO_FORMAT_PCM_FLOAT)
+		- HAL buffers:
+			In(0xef31c000 -> 0xf70f4000) InConversion(nullptr) Out(0xf70f4000 -> 0xef31c000) OutConversion(nullptr)
+		1 Clients:
+			 Pid Priority Ctrl Locked client server
+			17347        0  yes    yes      0      0
+Effect_params
+  Effect_enabled: 1
+  Effect_volume: 420
+SONY_Effects
+  ClearAudio plus status: 1
+  ca_plus_index: 0
+  VPT mode: 0
+  Dynamic_normalizer: 1
+  S-Force: 0
+  Clear Phase for Speaker: 4
+  ca_band_level: 0 0 0 0 0 0
+```
+
+在索尼音乐的 DIRECT 输出下，effect chain 生效了。可以观察到 VPT 和 ClearAudio 都在工作，DSEE 只有在特定条件下才工作（可以正常工作，但是我没开）。在这个实例中，送入 AudioFlinger 的就是 PCM 流。
+
+未观察到其它应用播放音频会经过此路径，实测的听感也符合上述结论和推测。
+
+## DIRECT with DIRECT HD：绕过绝大多数 effect chain
+
+在 Poweramp 的 HIRES 输出模式上观察到了 DIRECT，而且这个 DIRECT 有点特殊，我们一点一点看。
+
+### Poweramp 探测到的音频输出信息
+
+```plain
+reading /vendor/etc/audio_output_policy.conf
+has direct_pcm_24, sampling_rates=44100|48000|88200|96000|176400|192000|352800|384000
+AUDIO_OUTPUT_FLAG_DIRECT direct_pcm_24
+has direct_pcm_24 formats=AUDIO_FORMAT_PCM_24_BIT_PACKED|AUDIO_FORMAT_PCM_8_24_BIT|AUDIO_FORMAT_PCM_32_BIT
+FLAG_VARIANT_DIRECT_HD via direct_pcm_24
+FLAG_NEEDS_DEEP_BUFFER android_sdk=28
+USB can handle Hi-Res - sdk=28
+>>>OK flags=0x854616600000000
+FLAG_VARIANT_DIRECT_HD
+FLAG_SUPPORTS_PCM_8_24
+FLAG_SUPPORTS_PCM_24
+FLAG_SUPPORTS_PCM_32
+FLAG_SUPPORTS_UNITY_GAIN_STREAM
+FLAG_SUPPORTS_USB
+FLAG_NEEDS_EXTRA_SLEEPS
+FLAG_SUPPORTS_LDAC
+FLAG_NEEDS_DEEP_BUFFER
+FLAG_ALLOW_DVC_EFFECT
+FLAG_BT_DVC_EFFECT
+INTERNAL_OUTPUT_FLAG_SR_384K
+INTERNAL_OUTPUT_FLAG_SR_352K
+INTERNAL_OUTPUT_FLAG_SR_192K
+INTERNAL_OUTPUT_FLAG_SR_176K
+INTERNAL_OUTPUT_FLAG_SR_96K
+INTERNAL_OUTPUT_FLAG_SR_88K
+INTERNAL_OUTPUT_FLAG_SR_48K
+INTERNAL_OUTPUT_FLAG_SR_44K
+```
+
+Poweramp 探测到了非常多支持的音频规格，这些信息是从` /vendor/etc/audio_output_policy.conf` 中获取的，说明设备本身也支持这些规格。
+
+### AudioFlinger 和 effect chain
+
+```plain
+Output thread 0xf3074000, name AudioOut_5CD, tid 27468, type 1 (DIRECT):
+  I/O handle: 1485
+  Standby: no
+  Sample rate: 48000 Hz
+  HAL frame count: 3840
+  HAL format: 0x3 (AUDIO_FORMAT_PCM_32_BIT)
+  HAL buffer size: 30720 bytes
+  Channel count: 2
+  Channel mask: 0x00000003 (front-left, front-right)
+  Processing format: 0x3 (AUDIO_FORMAT_PCM_32_BIT)
+  Processing frame size: 8 bytes
+  Pending config events: none
+  Output device: 0x8 (AUDIO_DEVICE_OUT_WIRED_HEADPHONE)
+  Input device: 0 (AUDIO_DEVICE_NONE)
+  Audio source: 0 (default)
+  Normal frame count: 3840
+  Last write occurred (msecs): 40
+  Total writes: 210
+  Delayed writes: 0
+  Blocked in write: yes
+  Suspend count: 0
+  Sink buffer : 0xef324000
+  Mixer buffer: 0xf2b03000
+  Effect buffer: 0xefdd3000
+  Fast track availMask=0xfe
+  Standby delay ns=1000000000
+  AudioStreamOut: 0xf48ddee8 flags 0x1 (AUDIO_OUTPUT_FLAG_DIRECT)
+  Frames written: 806400
+  Suspended frames: 0
+```
+
+可以观察到 AUDIO_OUTPUT_FLAG_DIRECT，经过此路径的音频不会被重采样和进行位深转换，因为 Poweramp 已经完成了这些操作（如果符合条件），送入 AudioFlinger 的就是 PCM 流。
+
+```plain
+Dsee 0x0:
+ Mode: disable
+  Sample rate: 48000
+  Format: 0x3 (pcm32)
+  Fragment size: 23040
+
+HAL_Volume
+  Volume_l: 1.00000000
+  Volume_r: 1.00000000
+  Stream volumes in dB: 0:-17, 1:-24, 2:-6, 3:-26, 4:-14, 5:-6, 6:-inf, 7:-6, 8:-18, 9:-96, 10:0, 11:0, 12:0
+  Normal mixer raw underrun counters: partial=0 empty=0
+  1 Tracks of which 1 are active
+    T Name Active Client Session S  Flags   Format Chn mask  SRate ST  L dB  R dB  VS dB   Server FrmCnt  FrmRdy F Underruns  Flushed Main Buf  Aux Buf
+         0    yes  27110    7337 A  0x000 00000003 00000003  48000  8     0     0     0  000C5D00   7684    3844 A         0      288 EFDD3000 00000000
+  1 Effect Chains
+    1 effects for session 7337
+	In buffer               Out buffer                 Active tracks:
+	0xefdd3000 -> 0xf7112000   0xf7112000 -> 0xefdd3000   1
+	Effect ID 1099:
+		Session Status State Engine:
+		07337   000    003   0xf489ab30
+		Descriptor:
+		- UUID: 119341a0-8469-11df-81f9-0002a5d5c51b
+		- TYPE: 09e8ede0-ddde-11db-b4f6-0002a5d5c51b
+		- apiVersion: F38B5B40
+		- flags: 00000050 (conn. mode: insert, insert pref: last, volume mgmt: implements control, input mode: not set, output mode: not set)
+		- name: Volume
+		- implementor: NXP Software Ltd.
+		- data: float
+		- Input configuration:
+			Buffer     Frames  Smp rate Channels Format
+			0xf7112000 03840   48000    00000003      5 (AUDIO_FORMAT_PCM_FLOAT)
+		- Output configuration:
+			Buffer     Frames  Smp rate Channels Format
+			0xf7112000 03840   48000    00000003      5 (AUDIO_FORMAT_PCM_FLOAT)
+		- HAL buffers:
+			In(0xefdd3000 -> 0xf7112000) InConversion(nullptr) Out(0xf7112000 -> 0xefdd3000) OutConversion(nullptr)
+		1 Clients:
+			 Pid Priority Ctrl Locked client server
+			27110     1337  yes    yes      0      0
+```
+
+DSEE 挂载到了 effect chain 上，但被禁用了。可以看见 HAL 音量是 1.00000000，可能是因为 Poweramp 传递了 ALWAYS_UNITY_GAIN，它禁用了 HAL 的音频衰减，通过自己的 DVC 控制。
+
+值得注意的是 effect chain 中出现了一个 Volume (NXP Software Ltd.). 我在网上并没有查到相关的信息，这个效果器的输出和输出却都是 48000，标识着音频可能进行了重采样，但不太可能，原因下述：
+
+HAL 的音量是 1.00000000，说明 HAL 并没有调整音量，这个效果器可能是用来通知播放器 DVC 音量变化而非直接自行处理的音频，同时在其它播放器输出中并没有发现这个效果器，而测试的播放器中除了 Poweramp 都没有 DVC 功能。
+
+作为对比，在关闭 DVC 后，发现了如下变化;
+
+```plain
+Dsee 0x0:
+ Mode: disable
+  Sample rate: 48000
+  Format: 0x6 (pcm24)
+  Fragment size: 23040
+
+HAL_Volume
+  Volume_l: 0.05128648
+  Volume_r: 0.05128648
+  Stream volumes in dB: 0:-17, 1:-26, 2:-26, 3:-26, 4:-26, 5:-26, 6:-inf, 7:-26, 8:-18, 9:-96, 10:0, 11:0, 12:0
+  Normal mixer raw underrun counters: partial=0 empty=0
+  1 Tracks of which 1 are active
+    T Name Active Client Session S  Flags   Format Chn mask  SRate ST  L dB  R dB  VS dB   Server FrmCnt  FrmRdy F Underruns  Flushed Main Buf  Aux Buf
+         0    yes  27110    7385 A  0x000 00000006 00000003  48000  3     0     0     0  00027600   7684    7684 A         0        0 F3657000 00000000
+  0 Effect Chains
+  Local log:
+   05-24 18:00:56.490 CFG_EVENT_CREATE_AUDIO_PATCH: old device 0x8 (AUDIO_DEVICE_OUT_WIRED_HEADPHONE) new device 0x8 (AUDIO_DEVICE_OUT_WIRED_HEADPHONE)
+   05-24 18:00:56.493 AT::add       (0xf48f1080)      0     no  27110    7385 A  0x000 00000006 00000003  48000  3     0     0     0  00000000   7684       0 f         0        0 F3657000 00000000
+```
+
+注意到 HAL 进行了音量衰减，而 Volume 效果器消失了，如果它是用来调整音量的，为什么反而不存在了？同时观察到了系统音量变化并没有影响 HAL 音量为 1，而 DVC 关闭时会变化。Volume 效果器并没有实际处理音频，所以也没有重采样这一说。
+
+在实测中听感的变化也验证了上述推测。
+
+## OFFLOAD：针对非 PCM 流的直通
+
+在索尼音乐的实测中，还发现了一个不是很常见的输出模式：
+
+```
+Output thread 0xf3064000, name AudioOut_67D, tid 31664, type 4 (OFFLOAD):
+  I/O handle: 1661
+  Standby: no
+  Sample rate: 44100 Hz
+  HAL frame count: 32768
+  HAL format: 0x1000000 (AUDIO_FORMAT_MP3)
+  HAL buffer size: 32768 bytes
+  Channel count: 2
+  Channel mask: 0x00000003 (front-left, front-right)
+  Processing format: 0x1000000 (AUDIO_FORMAT_MP3)
+  Processing frame size: 1 bytes
+  Pending config events: none
+  Output device: 0x8 (AUDIO_DEVICE_OUT_WIRED_HEADPHONE)
+  Input device: 0 (AUDIO_DEVICE_NONE)
+  Audio source: 0 (default)
+  Normal frame count: 32768
+  Last write occurred (msecs): 166
+  Total writes: 13
+  Delayed writes: 0
+  Blocked in write: no
+  Suspend count: 0
+  Sink buffer : 0xf2b03000
+  Mixer buffer: 0xefa83000
+  Effect buffer: 0xef903000
+  Fast track availMask=0xfe
+  Standby delay ns=1000000000
+  AudioStreamOut: 0xf48dde70 flags 0x31 (AUDIO_OUTPUT_FLAG_DIRECT|AUDIO_OUTPUT_FLAG_COMPRESS_OFFLOAD|AUDIO_OUTPUT_FLAG_NON_BLOCKING)
+  Frames written: 262144
+  Suspended frames: 0
+```
+
+观察到模式是 OFFLOAD（type 4），HAL 识别到了是 AUDIO_FORMAT_MP3，并携带了  `AUDIO_OUTPUT_FLAG_DIRECT|AUDIO_OUTPUT_FLAG_COMPRESS_OFFLOAD|AUDIO_OUTPUT_FLAG_NON_BLOCKING` 这些 FLAGS。这些 FLAG 大致的意思就是 DIRECT 输出，不进行压缩，以非阻塞的方式输出。
+
+在此音频路径中 MP3 被直接 HAL 送进了 DSP 进行解码，CPU 没有参与音频处理。它也绕过了 MIXER 的那些重采样和位深转换，在播放不同规格的 MP3 文件时观察到了 HAL 规格变化。
+
+```plain
+Dsee 0xf13e5980:
+ DsxParam:
+   -Sample rate: 44100 -Codec: -1 -Average bitrate: -1
+ Mode: disable
+  Sample rate: 44100
+  Format: 0x1 (pcm16)
+  Fragment size: 14208
+
+HAL_Volume
+  Volume_l: 1.00000000
+  Volume_r: 1.00000000
+  Stream volumes in dB: 0:-17, 1:-30, 2:-30, 3:-30, 4:-30, 5:-30, 6:-inf, 7:-30, 8:-18, 9:-96, 10:-3.7, 11:0, 12:0
+  Normal mixer raw underrun counters: partial=0 empty=0
+  1 Tracks of which 1 are active
+    T Name Active Client Session S  Flags   Format Chn mask  SRate ST  L dB  R dB  VS dB   Server FrmCnt  FrmRdy F Underruns  Flushed Main Buf  Aux Buf
+         0    yes  31374    7737 A  0x000 00000001 00000003  44100  3     0     0     0  00006F00  22932   12276 A         0        0 EFC28000 00000000
+  1 Effect Chains
+    1 effects for session 7737
+	In buffer               Out buffer                 Active tracks:
+	0xefc28000 -> 0xf70bc000   0xf70bc000 -> 0xefc28000   1
+	Effect ID 1195:
+		Session Status State Engine:
+		07737   000    003   0xf489ae00
+		Descriptor:
+		- UUID: af8da7e0-2ca1-11e3-b71d-0002a5d5c51b
+		- TYPE: ec7178ec-e5e1-4432-a3f4-4657e6795210
+		- apiVersion: F12AC400
+		- flags: 00400240 (conn. mode: insert, insert pref: any, volume mgmt: implements control, device indication: requires updates, input mode: not set, output mode: not set, offloadable)
+		- name: Sonysweffect
+		- implementor: SONY
+		- data: float
+		- Input configuration:
+			Buffer     Frames  Smp rate Channels Format
+			0xf70bc000 03552   44100    00000003      5 (AUDIO_FORMAT_PCM_FLOAT)
+		- Output configuration:
+			Buffer     Frames  Smp rate Channels Format
+			0xf70bc000 03552   44100    00000003      5 (AUDIO_FORMAT_PCM_FLOAT)
+		- HAL buffers:
+			In(0xefc28000 -> 0xf70bc000) InConversion(nullptr) Out(0xf70bc000 -> 0xefc28000) OutConversion(nullptr)
+		1 Clients:
+			 Pid Priority Ctrl Locked client server
+			17347        0  yes    yes      0      0
+Effect_params
+  Effect_enabled: 1
+  Effect_volume: 259
+SONY_Effects
+  ClearAudio plus status: 1
+  ca_plus_index: 0
+  VPT mode: 0
+  Dynamic_normalizer: 1
+  S-Force: 0
+  Clear Phase for Speaker: 4
+  ca_band_level: 0 0 0 0 0 0
+  Local log:
+   05-24 19:23:24.969 CFG_EVENT_CREATE_AUDIO_PATCH: old device 0x8 (AUDIO_DEVICE_OUT_WIRED_HEADPHONE) new device 0x8 (AUDIO_DEVICE_OUT_WIRED_HEADPHONE)
+   05-24 19:23:24.971 AT::add       (0xf48ef280)      0     no  31374    7737 A  0x000 00000001 00000003  44100  3     0     0     0  00000000  22932       0 f         0        0 EFC28000 00000000
+```
+
+这个路径的 effect chain 上挂的都是索尼效果器。可以观察到 ClearAudio, VPT 之类的功能都在正常工作。
+
+没有压缩编码的上下文（如 MP3/AAC 的 metadata），DSEE 可以正常工作（我没开）。
+
+值得注意的是，HAL 音量同样是 1.00000000，但是 effect chain 中没有发现 NXP 的 Volume 效果器，这是因为 `  Dynamic_normalizer: 1`，也就是动态均衡器开启了，可能是它替代了 NXP Volume.
+
+作为对比，我关闭了动态均衡器：
+
+```plain
+HAL_Volume
+  Volume_l: 0.03162301
+  Volume_r: 0.03162301
+  Stream volumes in dB: 0:-17, 1:-30, 2:-30, 3:-30, 4:-30, 5:-30, 6:-inf, 7:-30, 8:-18, 9:-96, 10:-3.7, 11:0, 12:0
+  Normal mixer raw underrun counters: partial=0 empty=0
+  1 Tracks of which 1 are active
+    T Name Active Client Session S  Flags   Format Chn mask  SRate ST  L dB  R dB  VS dB   Server FrmCnt  FrmRdy F Underruns  Flushed Main Buf  Aux Buf
+         0    yes  31374    7817 A  0x000 00000001 00000003  44100  3     0     0     0  00633D20  22932   12276 A         0        0 EFC6B000 00000000
+  1 Effect Chains
+    1 effects for session 7817
+	In buffer               Out buffer                 Active tracks:
+	0xefc6b000 -> 0xf70bc000   0xf70bc000 -> 0xefc6b000   1
+	Effect ID 1219:
+		Session Status State Engine:
+		07817   000    000   0xf489b100
+		Descriptor:
+		- UUID: af8da7e0-2ca1-11e3-b71d-0002a5d5c51b
+		- TYPE: ec7178ec-e5e1-4432-a3f4-4657e6795210
+		- apiVersion: F48EBE40
+		- flags: 00400240 (conn. mode: insert, insert pref: any, volume mgmt: implements control, device indication: requires updates, input mode: not set, output mode: not set, offloadable)
+		- name: Sonysweffect
+		- implementor: SONY
+		- data: float
+		- Input configuration:
+			Buffer     Frames  Smp rate Channels Format
+			0xf70bc000 03552   44100    00000003      5 (AUDIO_FORMAT_PCM_FLOAT)
+		- Output configuration:
+			Buffer     Frames  Smp rate Channels Format
+			0xf70bc000 03552   44100    00000003      5 (AUDIO_FORMAT_PCM_FLOAT)
+		- HAL buffers:
+			In(0xefc6b000 -> 0xf70bc000) InConversion(nullptr) Out(0xf70bc000 -> 0xefc6b000) OutConversion(nullptr)
+		1 Clients:
+			 Pid Priority Ctrl Locked client server
+			17347        0  yes    yes      0      0
+Effect_params
+  Effect_enabled: 0
+  Effect_volume: 259
+  Local log:
+   05-24 19:40:49.662 CFG_EVENT_CREATE_AUDIO_PATCH: old device 0x8 (AUDIO_DEVICE_OUT_WIRED_HEADPHONE) new device 0x8 (AUDIO_DEVICE_OUT_WIRED_HEADPHONE)
+   05-24 19:40:49.664 AT::add       (0xf128a280)      0     no  31374    7817 A  0x000 00000001 00000003  44100  3     0     0     0  00000000  22932       0 f         0        0 EFC6B000 00000000
+```
+
+观察到 HAL 音量不再是 1，表明 HAL 进行了音量衰减，也说明了索尼音乐没有 DVC 功能。
+
+在实测中，除了 DSEE 的开关之外没有发现其它听感上的区别。
+
+## 放弃了高保真音频，真的值得吗？
+
+在剖析了上述四种输出模式之后，我们回到最开始提出的一个问题：
+
+> 为此强行放弃了高保真音频，真的值得吗？
+
+这个问题站在不同人角度看答案是不同的。站在厂商的角度看是没有问题的，因为 DIRECT 不是 Android 默认就提供的，它需要厂商对 HAL 进行定制，而且会破坏杜比音效之类的后处理的兼容性，所以全都走 MIXER 并统一规格，是一个在工程上无可置疑的选择。
+
+但在我看来，所谓的后处理效果根本就不是必要的。一盘好的母带，已经经过了混音师的调整，他的目的不是”更好听”，而是“更标准”。
+
+这就像很多电视对画面的后处理一样，看上去确实更艳丽更生动，但是看久了不刺眼吗？色彩和白点标准吗？还原了导演的真实意图吗？为什么电视这么大的屏幕，在制作现场做一个参考性的大屏幕监看都不配？
+
+换句话说，我们使用的这些回放设备，到底有没有尊重创作者？有没有努力地还原创作者想传递给我们的心意？在现在大多数消费级电子产品上，我可以说：没有。
+
+在消费级电视上，我们看见了 filmmaker 模式，看见了厂商的一点诚意。但是在手机上，我没有看见任何现在厂商的诚意。
+
+Xperia 基本已经退出了消费级电子市场，但这部来自 2017 年的上古兵器，却让我对 Xperia 有了新的认识，也让我对“到底是什么是高保真”有了新的认识。
+
+也许，不作处理的处理，才是最好的处理吧。
