@@ -1,5 +1,7 @@
 ---
 import type { MarkdownHeading } from "astro";
+import { Icon } from "astro-icon/components";
+import { url } from "../../utils/url-utils";
 import Categories from "./Categories.astro";
 import Profile from "./Profile.astro";
 import Tag from "./Tags.astro";
@@ -18,5 +20,11 @@ const className = Astro.props.class;
     <div id="sidebar-sticky" class="transition-all duration-700 flex flex-col w-full gap-4 top-4 sticky top-4">
         <Categories class="onload-animation" style="animation-delay: 150ms"></Categories>
         <Tag class="onload-animation" style="animation-delay: 200ms"></Tag>
+        <div class="card-base p-3 onload-animation" style="animation-delay: 250ms">
+            <a href={url('/privacy/')} class="btn-regular rounded-lg w-full h-10 gap-2 font-bold active:scale-95 flex items-center justify-center">
+                <Icon name="material-symbols:shield-outline" class="text-[1.25rem]"></Icon>
+                Privacy Policy
+            </a>
+        </div>
     </div>
 </div>
