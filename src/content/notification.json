@@ -1,6 +1,6 @@
 {
 	"id": "notification-v1",
 	"enabled": true,
-	"message": "欢迎来到 Nalanyinyun's Library！如果你喜欢这个网站，欢迎关注我的其他社交平台。",
+	"message": "欢迎来到 Nalanyinyun's Library, 此网站由 Nalanyinyun Gakuen Library Iinkai 维护！",
 	"buttons": []
 }
