@@ -2,7 +2,7 @@
 import { Icon } from "astro-icon/components";
 import notificationData from "@/content/notification.json";
 
-const { id, enabled, message, link } = notificationData;
+const { id, enabled, message, buttons = [] } = notificationData;
 ---
 
 {enabled && (
@@ -14,15 +14,19 @@ const { id, enabled, message, link } = notificationData;
     <div class="notification-container">
       <div class="notification-content">
         <Icon name="material-symbols:info-outline-rounded" class="notification-icon" />
-        <p class="notification-message">
-          {message}
-          {link && link.url && (
-            <a href={link.url} class="notification-link">
-              {link.text}
-              <Icon name="fa6-solid:arrow-right" class="link-arrow" />
-            </a>
+        <div class="notification-body">
+          <p class="notification-message">{message}</p>
+          {buttons && buttons.length > 0 && (
+            <div class="notification-buttons">
+              {buttons.map((btn: { text: string; url: string }) => (
+                <a href={btn.url} class="notification-btn">
+                  {btn.text}
+                  <Icon name="fa6-solid:arrow-right" class="btn-arrow" />
+                </a>
+              ))}
+            </div>
           )}
-        </p>
+        </div>
       </div>
       <button 
         id="notification-close-btn" 
@@ -81,28 +85,43 @@ const { id, enabled, message, link } = notificationData;
   color: var(--primary)
   margin-top: 0.125rem
 
+.notification-body
+  display: flex
+  flex-direction: column
+  gap: 0.5rem
+  flex: 1
+
 .notification-message
   font-size: 0.875rem
   line-height: 1.5
   color: var(--text-color)
   margin: 0
 
-.notification-link
+.notification-buttons
+  display: flex
+  flex-wrap: wrap
+  gap: 0.5rem
+
+.notification-btn
   display: inline-flex
   align-items: center
   gap: 0.25rem
   color: var(--primary)
   text-decoration: none
+  font-size: 0.8125rem
   font-weight: 500
-  margin-left: 0.5rem
-  transition: opacity 0.2s ease
+  padding: 0.25rem 0.5rem
+  border-radius: 0.375rem
+  background: var(--btn-plain-bg)
+  transition: background 0.2s ease, opacity 0.2s ease
 
   &:hover
-    opacity: 0.8
+    background: var(--btn-plain-bg-hover)
+    opacity: 0.9
 
-  .link-arrow
-    width: 0.625rem
-    height: 0.625rem
+  .btn-arrow
+    width: 0.5rem
+    height: 0.5rem
 
 .notification-close
   flex-shrink: 0
