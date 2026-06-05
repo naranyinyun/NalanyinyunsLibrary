@@ -1,0 +1,9 @@
+{
+  "id": "notification-v1",
+  "enabled": true,
+  "message": "欢迎来到 Nalanyinyun's Library！如果你喜欢这个网站，欢迎关注我的其他社交平台。",
+  "link": {
+    "text": "了解更多",
+    "url": "/about"
+  }
+}
