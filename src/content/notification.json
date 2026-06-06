@@ -1,6 +1,8 @@
 {
 	"id": "notification-v1",
 	"enabled": true,
-	"message": "欢迎来到 Nalanyinyun's Library, 此网站由 Nalanyinyun Gakuen Library Iinkai 维护！",
-	"buttons": []
+	"message": "Nalanyinyun Gakuen Library Iinkai.\n\n Soundtrack \n 01 Goldenfield - fhána, VISUAL ARTS / Key",
+	"buttons": [
+		{ "text": "Listen", "url": "https://music.apple.com/cn/song/goldenfield/1853001263" }
+	]
 }

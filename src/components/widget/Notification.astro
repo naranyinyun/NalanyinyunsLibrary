@@ -15,7 +15,7 @@ const { id, enabled, message, buttons = [] } = notificationData;
       <div class="notification-content">
         <Icon name="material-symbols:info-outline-rounded" class="notification-icon" />
         <div class="notification-body">
-          <p class="notification-message">{message}</p>
+           <p class="notification-message" set:html={message.replace(/\n/g, '<br>')}></p>
           {buttons && buttons.length > 0 && (
             <div class="notification-buttons">
               {buttons.map((btn: { text: string; url: string }) => (
