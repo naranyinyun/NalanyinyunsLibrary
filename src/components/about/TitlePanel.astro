@@ -2,13 +2,13 @@
 import TitleCard from "./TitleCard.astro";
 
 interface TitleEntry {
-  organization: string;
-  title: string;
-  titleReading?: string;
+	organization: string;
+	title: string;
+	titleReading?: string;
 }
 
 interface Props {
-  entries: TitleEntry[];
+	entries: TitleEntry[];
 }
 
 const { entries } = Astro.props;

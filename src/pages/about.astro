@@ -1,8 +1,8 @@
 ---
 
 import { getEntry, render } from "astro:content";
-import Markdown from "@components/misc/Markdown.astro";
 import TitlePanel from "@components/about/TitlePanel.astro";
+import Markdown from "@components/misc/Markdown.astro";
 import I18nKey from "../i18n/i18nKey";
 import { i18n } from "../i18n/translation";
 import MainGridLayout from "../layouts/MainGridLayout.astro";
@@ -16,21 +16,21 @@ if (!aboutPost) {
 const { Content } = await render(aboutPost);
 
 const titles = [
-  {
-    organization: "Nalanyinyun Gakuen Library Iinkai",
-    title: "Tosho Iin",
-    titleReading: "図書委員",
-  },
-  {
-    organization: "Nalanyinyun Gakuen Gakuseikai",
-    title: "Seito Kaicho",
-    titleReading: "生徒会長",
-  },
-  {
-    organization: "Nalanyinyun Gakuen Bunkasai Jikko Iinkai",
-    title: "Iincho",
-    titleReading: "委員長",
-  },
+	{
+		organization: "Nalanyinyun Gakuen Library Iinkai",
+		title: "Tosho Iin",
+		titleReading: "図書委員",
+	},
+	{
+		organization: "Nalanyinyun Gakuen Gakuseikai",
+		title: "Seito Kaicho",
+		titleReading: "生徒会長",
+	},
+	{
+		organization: "Nalanyinyun Gakuen Bunkasai Jikko Iinkai",
+		title: "Iincho",
+		titleReading: "委員長",
+	},
 ];
 ---
 <MainGridLayout title={i18n(I18nKey.about)} description={i18n(I18nKey.about)}>
