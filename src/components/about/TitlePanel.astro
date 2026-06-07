@@ -1,0 +1,51 @@
+---
+import TitleCard from "./TitleCard.astro";
+
+interface TitleEntry {
+	organization: string;
+	title: string;
+	titleReading?: string;
+}
+
+interface Props {
+	entries: TitleEntry[];
+}
+
+const { entries } = Astro.props;
+---
+
+<div class="title-panel card-base px-7 py-6">
+
+  <!-- 面板标题区 -->
+  <div class="flex items-center gap-3 mb-5">
+    <!-- 装饰线 -->
+    <div class="h-px flex-1 bg-gradient-to-r from-transparent to-[var(--primary)]/30"></div>
+    <div class="flex items-center gap-2">
+      <!-- 装饰菱形 -->
+      <div class="w-1.5 h-1.5 rotate-45 bg-[var(--primary)]/50"></div>
+      <span class="text-xs tracking-[0.3em] uppercase text-[var(--primary)]/60 font-medium font-mono">Roles &amp; Titles</span>
+      <div class="w-1.5 h-1.5 rotate-45 bg-[var(--primary)]/50"></div>
+    </div>
+    <div class="h-px flex-1 bg-gradient-to-l from-transparent to-[var(--primary)]/30"></div>
+  </div>
+
+  <!-- 头衔列表 -->
+  <div class="flex flex-col gap-3">
+    {entries.map((entry, i) => (
+      <TitleCard
+        index={i + 1}
+        organization={entry.organization}
+        title={entry.title}
+        titleReading={entry.titleReading}
+      />
+    ))}
+  </div>
+
+  <!-- 面板底部装饰 -->
+  <div class="flex items-center gap-3 mt-5">
+    <div class="h-px flex-1 bg-gradient-to-r from-transparent to-[var(--primary)]/20"></div>
+    <div class="w-1 h-1 rotate-45 bg-[var(--primary)]/30"></div>
+    <div class="h-px flex-1 bg-gradient-to-l from-transparent to-[var(--primary)]/20"></div>
+  </div>
+
+</div>
