@@ -1,0 +1,104 @@
+---
+interface Props {
+  index: number;
+  organization: string;
+  title: string;
+  titleReading?: string;
+}
+
+const { index, organization, title, titleReading } = Astro.props;
+
+const indexStr = String(index).padStart(2, "0");
+---
+
+<div class="title-card group relative overflow-hidden transition-all duration-500 cursor-default
+  border border-[var(--primary)]/20 hover:border-[var(--primary)]/50
+  bg-[var(--card-bg)] rounded-[var(--radius-large)]
+  hover:shadow-[0_0_24px_-4px_var(--primary)] hover:-translate-y-0.5">
+
+  <!-- 背景纹饰层：极细菱形交叉网格 -->
+  <div class="card-pattern absolute inset-0 pointer-events-none opacity-[0.35] group-hover:opacity-60 transition-opacity duration-500"></div>
+
+  <!-- 左侧竖向装饰条 -->
+  <div class="absolute left-0 top-0 bottom-0 w-[3px] bg-gradient-to-b from-[var(--primary)]/0 via-[var(--primary)] to-[var(--primary)]/0
+    opacity-60 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+  <!-- 背景装饰大字 —— 用 skewX 模拟 CJK 斜体（CJK 字符不响应 font-style: italic） -->
+  <!-- top-[50%] 定位，CSS class 内 translateY(-50%) + skewX(-8deg) 一并处理 -->
+  {titleReading && (
+    <div class="title-reading-bg absolute right-3 top-[50%] text-6xl font-bold tracking-widest
+      text-[var(--primary)]/6 group-hover:text-[var(--primary)]/12 transition-[color] duration-500
+      pointer-events-none select-none font-serif leading-none whitespace-nowrap">
+      {titleReading}
+    </div>
+  )}
+
+  <div class="relative z-10 pl-6 pr-5 py-5 flex items-center gap-5">
+
+    <!-- 序号 -->
+    <div class="flex-shrink-0 flex flex-col items-center">
+      <span class="text-[0.6rem] font-mono text-[var(--primary)]/50 group-hover:text-[var(--primary)]/80 transition-colors duration-300 leading-none tracking-[0.15em]">No.</span>
+      <span class="text-2xl font-bold font-mono text-[var(--primary)]/30 group-hover:text-[var(--primary)]/70 transition-colors duration-300 leading-tight">{indexStr}</span>
+    </div>
+
+    <!-- 分隔线 -->
+    <div class="flex-shrink-0 w-px h-10 bg-[var(--primary)]/20 group-hover:bg-[var(--primary)]/40 transition-colors duration-300"></div>
+
+    <!-- 内容 -->
+    <div class="flex flex-col gap-1 min-w-0">
+      <!-- 组织名 -->
+      <div class="text-xs tracking-[0.12em] text-[var(--primary)]/60 group-hover:text-[var(--primary)]/90 transition-colors duration-300 font-medium truncate">
+        {organization}
+      </div>
+      <!-- 头衔 -->
+      <div class="text-base font-bold tracking-[0.08em] text-[var(--primary)] leading-snug">
+        {title}
+      </div>
+    </div>
+
+    <!-- 右侧装饰菱形 -->
+    <div class="ml-auto flex-shrink-0 flex items-center justify-center">
+      <div class="w-2 h-2 rotate-45 border border-[var(--primary)]/30 group-hover:border-[var(--primary)]/80 group-hover:bg-[var(--primary)]/20
+        transition-all duration-300"></div>
+    </div>
+
+  </div>
+
+  <!-- 底部装饰横线（扫描线效果） -->
+  <div class="absolute bottom-0 left-6 right-5 h-px bg-gradient-to-r from-transparent via-[var(--primary)]/20 to-transparent
+    group-hover:via-[var(--primary)]/50 transition-all duration-500"></div>
+
+</div>
+
+<style>
+  /*
+   * CJK 斜体模拟：用 skewX 产生视觉上的倾斜感
+   * 同时在 X 轴缩放补偿，让字形不显得过宽
+   */
+  .title-reading-bg {
+    transform: translateY(-50%) skewX(-8deg) scaleX(0.95);
+  }
+
+  /*
+   * 菱形交叉网格纹饰
+   * 两条对角线叠加形成菱形格，线宽 1px、间距 14px
+   * 颜色取主题金色 hsl(50)，透明度极低保持轻盈感
+   */
+  .card-pattern {
+    background-image:
+      repeating-linear-gradient(
+        45deg,
+        hsla(50, 65%, 50%, 0.22) 0px,
+        hsla(50, 65%, 50%, 0.22) 1px,
+        transparent 1px,
+        transparent 14px
+      ),
+      repeating-linear-gradient(
+        -45deg,
+        hsla(50, 65%, 50%, 0.22) 0px,
+        hsla(50, 65%, 50%, 0.22) 1px,
+        transparent 1px,
+        transparent 14px
+      );
+  }
+</style>
