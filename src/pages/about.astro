@@ -2,6 +2,7 @@
 
 import { getEntry, render } from "astro:content";
 import Markdown from "@components/misc/Markdown.astro";
+import TitlePanel from "@components/about/TitlePanel.astro";
 import I18nKey from "../i18n/i18nKey";
 import { i18n } from "../i18n/translation";
 import MainGridLayout from "../layouts/MainGridLayout.astro";
@@ -13,6 +14,24 @@ if (!aboutPost) {
 }
 
 const { Content } = await render(aboutPost);
+
+const titles = [
+  {
+    organization: "Nalanyinyun Gakuen Library Iinkai",
+    title: "Tosho Iin",
+    titleReading: "図書委員",
+  },
+  {
+    organization: "Nalanyinyun Gakuen Gakuseikai",
+    title: "Seito Kaicho",
+    titleReading: "生徒会長",
+  },
+  {
+    organization: "Nalanyinyun Gakuen Bunkasai Jikko Iinkai",
+    title: "Iincho",
+    titleReading: "委員長",
+  },
+];
 ---
 <MainGridLayout title={i18n(I18nKey.about)} description={i18n(I18nKey.about)}>
     <div class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative min-h-32">
@@ -21,5 +40,8 @@ const { Content } = await render(aboutPost);
                 <Content />
             </Markdown>
         </div>
+    </div>
+    <div class="mt-4">
+        <TitlePanel entries={titles} />
     </div>
 </MainGridLayout>
