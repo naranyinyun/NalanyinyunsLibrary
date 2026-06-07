@@ -1,5 +1,9 @@
 # About
 
-Nalanyinyun Gakuen Library Iinkai "Tosho Iin"  
-Nalanyinyun Gakuen Gakuseikai “Seito Kaicho”  
-Nalanyinyun Gakuen Bunkasai Jikko Iinkai "Iincho"  
+欢迎来到纳兰音韵的大图书馆。
+
+本网站由 Nalanyinyun Gakuen Library Iinkai 维护，针对所有校内学生全天候开放，不定时更新文学类和技术类书籍，欢迎订阅图书馆的新书通知（网站 Footer 上的 Email Subscription）！
+
+图书委员可能会通过您留下的邮箱询问关于内容或者网站的意见，也欢迎各位借阅者随时通过邮箱联系我们。
+
+***不要调戏正在看书的图书委员***
