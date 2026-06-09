@@ -37,8 +37,8 @@ const indexStr = String(index).padStart(2, "0");
 
     <!-- 序号 -->
     <div class="flex-shrink-0 flex flex-col items-center">
-      <span class="text-[0.6rem] font-mono text-[var(--primary)]/50 group-hover:text-[var(--primary)]/80 transition-colors duration-300 leading-none tracking-[0.15em]">No.</span>
-      <span class="text-2xl font-bold font-mono text-[var(--primary)]/30 group-hover:text-[var(--primary)]/70 transition-colors duration-300 leading-tight">{indexStr}</span>
+      <span class="text-[0.6rem] font-mono text-black dark:text-white group-hover:text-black/75 dark:group-hover:text-white/75 transition-colors duration-300 leading-none tracking-[0.15em]">No.</span>
+      <span class="text-2xl font-bold font-mono text-black dark:text-white group-hover:text-black/70 dark:group-hover:text-white/70 transition-colors duration-300 leading-tight">{indexStr}</span>
     </div>
 
     <!-- 分隔线 -->
@@ -47,7 +47,7 @@ const indexStr = String(index).padStart(2, "0");
     <!-- 内容 -->
     <div class="flex flex-col gap-1 min-w-0">
       <!-- 组织名 -->
-      <div class="text-xs tracking-[0.12em] text-[var(--primary)]/60 group-hover:text-[var(--primary)]/90 transition-colors duration-300 font-medium truncate">
+      <div class="text-xs tracking-[0.12em] text-black dark:text-white group-hover:text-black/80 dark:group-hover:text-white/80 transition-colors duration-300 font-medium truncate">
         {organization}
       </div>
       <!-- 头衔 -->
@@ -55,13 +55,6 @@ const indexStr = String(index).padStart(2, "0");
         {title}
       </div>
     </div>
-
-    <!-- 右侧装饰菱形 -->
-    <div class="ml-auto flex-shrink-0 flex items-center justify-center">
-      <div class="w-2 h-2 rotate-45 border border-[var(--primary)]/30 group-hover:border-[var(--primary)]/80 group-hover:bg-[var(--primary)]/20
-        transition-all duration-300"></div>
-    </div>
-
   </div>
 
   <!-- 底部装饰横线（扫描线效果） -->
