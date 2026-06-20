@@ -4,6 +4,14 @@ import xml.etree.ElementTree as ET
 import resend
 import os
 
+def judgemnent():
+    response = requests.get("https://nalanyinyun.work/.noupdate", timeout=15)
+    if response.status_code == 200:
+        print("Shirai Kuroko: No update needed. Exiting.")
+        exit(0)
+    else:
+        print("Shirai Kuroko: Update needed. Proceeding with the update.")
+
 
 def getRss(url):
     headers = {
@@ -46,7 +54,7 @@ def publishLatest(apiKey, segmentID, fromID, subject, content):
         "send": True
     })
 
-
+judgemnent()
 url = "https://nalanyinyun.work/rss.xml" 
 content = generateEmailContent(getRss(url))
 
