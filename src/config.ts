@@ -50,6 +50,7 @@ export const profileConfig: ProfileConfig = {
 	avatar: "assets/images/91950505.png", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
 	name: "Nalanyinyun",
 	bio: "日傘を差した物静かな天然素材",
+	author: "Nalanyinyun", // Default author for posts
 	links: [
 		{
 			name: "Bilibili",

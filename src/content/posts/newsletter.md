@@ -86,7 +86,8 @@ resend.Broadcasts.create(params)
 ### Python 脚本
 
 Python 脚本需要做的事情大概有三件：
-1. 提取 RSS 的第一个 Item 
+
+1. 提取 RSS 的第一个 Item
 2. 编写电子邮件内容
 3. 通过 Resend Broadcasts API 发送
 
@@ -274,7 +275,3 @@ jobs:
 本站的所有源码以及上述的文件都可以在仓库中获取，如果你觉得对你有帮助，谢谢 star 啦。
 
 ::github{repo="naranyinyun/NalanyinyunsLibrary"}
-
-
-
-
