@@ -8,6 +8,7 @@ import swup from "@swup/astro";
 import { defineConfig } from "astro/config";
 import expressiveCode from "astro-expressive-code";
 import icon from "astro-icon";
+import indexnow from "astro-indexnow";
 import pagefind from "astro-pagefind";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeComponents from "rehype-components"; /* Render the custom directive content */
@@ -106,6 +107,9 @@ export default defineConfig({
 		svelte(),
 		sitemap(),
 		pagefind(),
+		indexnow({
+			key: "7aa9d12fee4348c980807dbad7575dd0",
+		}),
 	],
 
 	markdown: {
