@@ -1,11 +1,11 @@
 {
 	"id": "notification-v1",
 	"enabled": true,
-	"message": "Nalanyinyun Gakuen Library Iinkai.\n\n Soundtrack \n 01 Goldenfield - fhána, VISUAL ARTS / Key",
+	"message": "AnimeSearch 服务上线，欢迎使用！",
 	"buttons": [
 		{
-			"text": "Listen",
-			"url": "https://music.apple.com/cn/song/goldenfield/1853001263"
+			"text": "Goto",
+			"url": "https://dmhy.nalanyinyun.work/"
 		}
 	]
 }
