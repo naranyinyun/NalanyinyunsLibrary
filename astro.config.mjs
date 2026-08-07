@@ -108,7 +108,7 @@ export default defineConfig({
 		sitemap(),
 		pagefind(),
 		indexnow({
-			key: "7aa9d12fee4348c980807dbad7575dd0",
+			key: "d9ff093cdc1e407c8efa2b0a28a38fad",
 		}),
 	],
 
