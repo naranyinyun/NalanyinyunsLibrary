@@ -11,87 +11,57 @@ const { index, organization, title, titleReading } = Astro.props;
 const indexStr = String(index).padStart(2, "0");
 ---
 
-<div class="title-card group relative overflow-hidden transition-all duration-500 cursor-default
-  border border-[var(--primary)]/20 hover:border-[var(--primary)]/50
-  bg-[var(--card-bg)] rounded-[var(--radius-large)]
-  hover:shadow-[0_0_24px_-4px_var(--primary)] hover:-translate-y-0.5">
+<article class="title-card group relative isolate overflow-hidden rounded-[calc(var(--radius-large)-0.25rem)] border border-black/[0.08] bg-[var(--btn-regular-bg)] transition duration-300 hover:-translate-y-0.5 hover:border-[var(--primary)]/50 hover:shadow-[0_12px_28px_-18px_var(--primary)] dark:border-white/[0.1]">
+  <div class="card-pattern pointer-events-none absolute inset-0 z-0 opacity-40 transition-opacity duration-300 group-hover:opacity-70 dark:opacity-25 dark:group-hover:opacity-45"></div>
+  <div class="absolute inset-y-0 left-0 z-0 w-1 bg-gradient-to-b from-transparent via-[var(--primary)] to-transparent opacity-70 transition-opacity duration-300 group-hover:opacity-100"></div>
 
-  <!-- 背景纹饰层：极细菱形交叉网格 -->
-  <div class="card-pattern absolute inset-0 pointer-events-none opacity-[0.35] group-hover:opacity-60 transition-opacity duration-500"></div>
-
-  <!-- 左侧竖向装饰条 -->
-  <div class="absolute left-0 top-0 bottom-0 w-[3px] bg-gradient-to-b from-[var(--primary)]/0 via-[var(--primary)] to-[var(--primary)]/0
-    opacity-60 group-hover:opacity-100 transition-opacity duration-500"></div>
-
-  <!-- 背景装饰大字 —— 用 skewX 模拟 CJK 斜体（CJK 字符不响应 font-style: italic） -->
-  <!-- top-[50%] 定位，CSS class 内 translateY(-50%) + skewX(-8deg) 一并处理 -->
   {titleReading && (
-    <div class="title-reading-bg absolute right-3 top-[50%] text-6xl font-bold tracking-widest
-      text-[var(--primary)]/6 group-hover:text-[var(--primary)]/12 transition-[color] duration-500
-      pointer-events-none select-none font-serif leading-none whitespace-nowrap">
+    <div class="title-reading-bg pointer-events-none absolute right-4 top-1/2 z-0 hidden select-none whitespace-nowrap font-serif text-6xl font-bold leading-none tracking-[0.18em] text-[var(--primary)]/[0.09] transition-colors duration-300 group-hover:text-[var(--primary)]/[0.16] sm:block dark:text-[var(--primary)]/[0.14] dark:group-hover:text-[var(--primary)]/[0.22]">
       {titleReading}
     </div>
   )}
 
-  <div class="relative z-10 pl-6 pr-5 py-5 flex items-center gap-5">
-
-    <!-- 序号 -->
-    <div class="flex-shrink-0 flex flex-col items-center">
-      <span class="text-[0.6rem] font-mono text-black dark:text-white group-hover:text-black/75 dark:group-hover:text-white/75 transition-colors duration-300 leading-none tracking-[0.15em]">No.</span>
-      <span class="text-2xl font-bold font-mono text-black dark:text-white group-hover:text-black/70 dark:group-hover:text-white/70 transition-colors duration-300 leading-tight">{indexStr}</span>
+  <div class="relative z-10 flex items-start gap-3 px-4 py-4 sm:items-center sm:gap-5 sm:px-6 sm:py-5">
+    <div class="flex w-9 shrink-0 flex-col items-center pt-0.5 sm:w-10 sm:pt-0">
+      <span class="font-mono text-[0.5625rem] font-medium uppercase leading-none tracking-[0.12em] text-black/45 dark:text-white/45">No.</span>
+      <span class="mt-1 font-mono text-xl font-bold leading-none text-black/80 transition-colors duration-300 group-hover:text-[var(--primary)] dark:text-white/85 sm:text-2xl">{indexStr}</span>
     </div>
 
-    <!-- 分隔线 -->
-    <div class="flex-shrink-0 w-px h-10 bg-[var(--primary)]/20 group-hover:bg-[var(--primary)]/40 transition-colors duration-300"></div>
+    <div class="mt-1 h-10 w-px shrink-0 bg-[var(--primary)]/25 transition-colors duration-300 group-hover:bg-[var(--primary)]/55 sm:mt-0"></div>
 
-    <!-- 内容 -->
-    <div class="flex flex-col gap-1 min-w-0">
-      <!-- 组织名 -->
-      <div class="text-xs tracking-[0.12em] text-black dark:text-white group-hover:text-black/80 dark:group-hover:text-white/80 transition-colors duration-300 font-medium truncate">
+    <div class="min-w-0 flex-1">
+      <div class="break-words text-[0.6875rem] font-medium leading-relaxed tracking-[0.08em] text-black/60 transition-colors duration-300 group-hover:text-black/80 dark:text-white/60 dark:group-hover:text-white/80 sm:text-xs sm:tracking-[0.12em]">
         {organization}
       </div>
-      <!-- 头衔 -->
-      <div class="text-base font-bold tracking-[0.08em] text-[var(--primary)] leading-snug">
+      <div class="mt-1 text-sm font-bold leading-snug tracking-[0.08em] text-[var(--primary)] sm:text-base">
         {title}
       </div>
     </div>
   </div>
 
-  <!-- 底部装饰横线（扫描线效果） -->
-  <div class="absolute bottom-0 left-6 right-5 h-px bg-gradient-to-r from-transparent via-[var(--primary)]/20 to-transparent
-    group-hover:via-[var(--primary)]/50 transition-all duration-500"></div>
-
-</div>
+  <div class="absolute bottom-0 left-4 right-4 z-10 h-px bg-gradient-to-r from-transparent via-[var(--primary)]/25 to-transparent transition-all duration-300 group-hover:via-[var(--primary)]/60 sm:left-6 sm:right-6"></div>
+</article>
 
 <style>
-  /*
-   * CJK 斜体模拟：用 skewX 产生视觉上的倾斜感
-   * 同时在 X 轴缩放补偿，让字形不显得过宽
-   */
   .title-reading-bg {
     transform: translateY(-50%) skewX(-8deg) scaleX(0.95);
   }
 
-  /*
-   * 菱形交叉网格纹饰
-   * 两条对角线叠加形成菱形格，线宽 1px、间距 14px
-   * 颜色取主题金色 hsl(50)，透明度极低保持轻盈感
-   */
   .card-pattern {
     background-image:
       repeating-linear-gradient(
         45deg,
-        hsla(50, 65%, 50%, 0.22) 0px,
-        hsla(50, 65%, 50%, 0.22) 1px,
+        color-mix(in oklch, var(--primary) 35%, transparent) 0px,
+        color-mix(in oklch, var(--primary) 35%, transparent) 1px,
         transparent 1px,
-        transparent 14px
+        transparent 16px
       ),
       repeating-linear-gradient(
         -45deg,
-        hsla(50, 65%, 50%, 0.22) 0px,
-        hsla(50, 65%, 50%, 0.22) 1px,
+        color-mix(in oklch, var(--primary) 35%, transparent) 0px,
+        color-mix(in oklch, var(--primary) 35%, transparent) 1px,
         transparent 1px,
-        transparent 14px
+        transparent 16px
       );
   }
 </style>
