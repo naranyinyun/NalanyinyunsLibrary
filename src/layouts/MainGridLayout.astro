@@ -1,11 +1,11 @@
 ---
+import { getImage, type ImageMetadata } from "astro:assets";
 import BackToTop from "@components/control/BackToTop.astro";
 import Footer from "@components/Footer.astro";
 import Navbar from "@components/Navbar.astro";
 import Notification from "@components/widget/Notification.astro";
 import SideBar from "@components/widget/SideBar.astro";
 import type { MarkdownHeading } from "astro";
-import { getImage, type ImageMetadata } from "astro:assets";
 import { Icon } from "astro-icon/components";
 import ImageWrapper from "../components/misc/ImageWrapper.astro";
 import TOC from "../components/widget/TOC.astro";
@@ -43,7 +43,9 @@ const images = import.meta.glob<ImageMetadata>("../assets/**/*", {
 	eager: true,
 });
 const bannerImage = images[`../${siteConfig.banner.src}`];
-const bannerPreload = bannerImage ? await getImage({ src: bannerImage }) : undefined;
+const bannerPreload = bannerImage
+	? await getImage({ src: bannerImage })
+	: undefined;
 
 const mainPanelTop = siteConfig.banner.enable
 	? `calc(${BANNER_HEIGHT}vh - ${MAIN_PANEL_OVERLAPS_BANNER_HEIGHT}rem)`

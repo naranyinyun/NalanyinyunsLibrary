@@ -1,11 +1,14 @@
+import { readdirSync, readFileSync } from "node:fs";
+import path from "node:path";
+import { slug as githubSlug } from "github-slugger";
 import sitemap from "@astrojs/sitemap";
 import svelte from "@astrojs/svelte";
 import tailwind from "@astrojs/tailwind";
 import vercel from "@astrojs/vercel";
 import { pluginCollapsibleSections } from "@expressive-code/plugin-collapsible-sections";
 import { pluginLineNumbers } from "@expressive-code/plugin-line-numbers";
-import AstroPWA from "@vite-pwa/astro";
 import swup from "@swup/astro";
+import AstroPWA from "@vite-pwa/astro";
 import { defineConfig } from "astro/config";
 import expressiveCode from "astro-expressive-code";
 import icon from "astro-icon";
@@ -27,6 +30,40 @@ import { GithubCardComponent } from "./src/plugins/rehype-component-github-card.
 import { parseDirectiveNode } from "./src/plugins/remark-directive-rehype.js";
 import { remarkExcerpt } from "./src/plugins/remark-excerpt.js";
 import { remarkReadingTime } from "./src/plugins/remark-reading-time.mjs";
+
+const POST_CACHE_LIMIT = 5;
+const postDirectory = new URL("./src/content/posts/", import.meta.url);
+
+function getLatestPostCachePaths() {
+	const posts = [];
+	const files = readdirSync(postDirectory, { recursive: true, withFileTypes: true });
+
+	for (const file of files) {
+		if (!file.isFile() || !/\.mdx?$/.test(file.name)) continue;
+
+		const filePath = path.join(file.parentPath, file.name);
+		const frontmatter = readFileSync(filePath, "utf8");
+		const published = frontmatter.match(/^published:\s*["']?([^\n"']+)/m)?.[1];
+		const isDraft = /^draft:\s*true\s*$/m.test(frontmatter);
+		if (!published || isDraft) continue;
+
+		const rawSlug = path
+			.relative(postDirectory.pathname, filePath)
+			.replace(/\\/g, "/")
+			.replace(/\.mdx?$/, "");
+		const slug = rawSlug.split("/").map(githubSlug).join("/");
+		posts.push({ slug, published: new Date(published) });
+	}
+
+	return new Set(
+		posts
+			.sort((a, b) => b.published.getTime() - a.published.getTime())
+			.slice(0, POST_CACHE_LIMIT)
+			.map(({ slug }) => `posts/${slug}/index.html`),
+	);
+}
+
+const latestPostCachePaths = getLatestPostCachePaths();
 
 // https://astro.build/config
 export default defineConfig({
@@ -64,9 +101,19 @@ export default defineConfig({
 				],
 			},
 			workbox: {
-				// Cache every generated page and every local resource referenced by it.
+				// Images are always fetched from the network; only the five newest posts
+				// are included in the offline precache.
 				globPatterns: [
-					"**/*.{css,html,ico,jpg,jpeg,js,json,png,svg,ttf,txt,webmanifest,webp,woff,woff2,xml}",
+					"**/*.{css,html,ico,js,json,ttf,txt,webmanifest,woff,woff2,xml}",
+				],
+				manifestTransforms: [
+					async (entries) => ({
+						manifest: entries.filter((entry) => {
+							const entryPath = decodeURI(entry.url).replace(/^\//, "");
+							return !entryPath.startsWith("posts/") || latestPostCachePaths.has(entryPath);
+						}),
+						warnings: [],
+					}),
 				],
 				maximumFileSizeToCacheInBytes: 8 * 1024 * 1024,
 				cleanupOutdatedCaches: true,
