@@ -5,6 +5,7 @@ import Navbar from "@components/Navbar.astro";
 import Notification from "@components/widget/Notification.astro";
 import SideBar from "@components/widget/SideBar.astro";
 import type { MarkdownHeading } from "astro";
+import { getImage, type ImageMetadata } from "astro:assets";
 import { Icon } from "astro-icon/components";
 import ImageWrapper from "../components/misc/ImageWrapper.astro";
 import TOC from "../components/widget/TOC.astro";
@@ -37,6 +38,13 @@ const hasBannerCredit =
 	siteConfig.banner.enable && siteConfig.banner.credit.enable;
 const hasBannerLink = !!siteConfig.banner.credit.url;
 
+const images = import.meta.glob<ImageMetadata>("../assets/**/*", {
+	import: "default",
+	eager: true,
+});
+const bannerImage = images[`../${siteConfig.banner.src}`];
+const bannerPreload = bannerImage ? await getImage({ src: bannerImage }) : undefined;
+
 const mainPanelTop = siteConfig.banner.enable
 	? `calc(${BANNER_HEIGHT}vh - ${MAIN_PANEL_OVERLAPS_BANNER_HEIGHT}rem)`
 	: "5.5rem";
@@ -46,6 +54,7 @@ const mainPanelTop = siteConfig.banner.enable
 
 <!-- Navbar -->
 <slot slot="head" name="head"></slot>
+{bannerPreload && <link slot="head" rel="preload" as="image" href={bannerPreload.src} />}
 <div id="top-row" class="z-50 pointer-events-none relative transition-all duration-700 max-w-[var(--page-width)] px-0 md:px-4 mx-auto" class:list={[""]}>
     <div id="navbar-wrapper" class="pointer-events-auto sticky top-0 transition-all">
         <Navbar></Navbar>
@@ -55,7 +64,7 @@ const mainPanelTop = siteConfig.banner.enable
 <!-- Banner -->
 {siteConfig.banner.enable && <div id="banner-wrapper" class={`absolute z-10 w-full transition duration-700 overflow-hidden`} style={`top: -${BANNER_HEIGHT_EXTEND}vh`}>
     <ImageWrapper id="banner" alt="Banner image of the blog" class:list={["object-cover h-full transition duration-700 opacity-0 scale-105"]}
-                  src={siteConfig.banner.src} position={siteConfig.banner.position}
+                  src={siteConfig.banner.src} position={siteConfig.banner.position} loading="eager" fetchpriority="high"
     >
     </ImageWrapper>
 </div>}

@@ -4,6 +4,7 @@ import tailwind from "@astrojs/tailwind";
 import vercel from "@astrojs/vercel";
 import { pluginCollapsibleSections } from "@expressive-code/plugin-collapsible-sections";
 import { pluginLineNumbers } from "@expressive-code/plugin-line-numbers";
+import AstroPWA from "@vite-pwa/astro";
 import swup from "@swup/astro";
 import { defineConfig } from "astro/config";
 import expressiveCode from "astro-expressive-code";
@@ -34,6 +35,45 @@ export default defineConfig({
 	trailingSlash: "always",
 
 	integrations: [
+		AstroPWA({
+			// Astro renders pages after Vite's HTML transform, so Layout.astro owns registration.
+			injectRegister: false,
+			registerType: "autoUpdate",
+			manifest: {
+				id: "/",
+				name: "Nalanyinyun's Library",
+				short_name: "Nalanyinyun's Library",
+				description: "纳兰音韵的大图书馆",
+				lang: "zh-CN",
+				start_url: "/",
+				scope: "/",
+				display: "standalone",
+				background_color: "#ffffff",
+				theme_color: "#ffffff",
+				icons: [
+					{
+						src: "/favicon/192.png",
+						sizes: "192x192",
+						type: "image/png",
+					},
+					{
+						src: "/favicon/512.png",
+						sizes: "512x512",
+						type: "image/png",
+					},
+				],
+			},
+			workbox: {
+				// Cache every generated page and every local resource referenced by it.
+				globPatterns: [
+					"**/*.{css,html,ico,jpg,jpeg,js,json,png,svg,ttf,txt,webmanifest,webp,woff,woff2,xml}",
+				],
+				maximumFileSizeToCacheInBytes: 8 * 1024 * 1024,
+				cleanupOutdatedCaches: true,
+				skipWaiting: true,
+				clientsClaim: true,
+			},
+		}),
 		tailwind({
 			nesting: true,
 		}),

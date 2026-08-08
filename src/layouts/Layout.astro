@@ -77,10 +77,10 @@ const bannerOffset =
 <!DOCTYPE html>
 <html lang={siteLang} class="bg-[var(--page-bg)] transition text-[14px] md:text-[16px]"
 	  data-overlayscrollbars-initialize
->
+	>
 	<head>
 		<link rel="manifest" href="/manifest.webmanifest" />
-    	<meta name="theme-color" content="#ffffff" />
+		<meta name="theme-color" content="#ffffff" />
 
 
 		<title>{pageTitle}</title>
@@ -141,6 +141,25 @@ const bannerOffset =
 			let offset = Math.floor(window.innerHeight * (BANNER_HEIGHT_EXTEND / 100));
 			offset = offset - offset % 4;
 			document.documentElement.style.setProperty('--banner-height-extend', `${offset}px`);
+		</script>
+		<script is:inline>
+			if ("serviceWorker" in navigator) {
+				let reloadingForUpdate = false;
+
+				navigator.serviceWorker.addEventListener("controllerchange", () => {
+					if (!reloadingForUpdate) {
+						reloadingForUpdate = true;
+						window.location.reload();
+					}
+				});
+
+				window.addEventListener("load", () => {
+					navigator.serviceWorker
+						.register("/sw.js", { updateViaCache: "none" })
+						.then((registration) => registration.update())
+						.catch((error) => console.error("Unable to register the offline cache", error));
+				});
+			}
 		</script>
 		<style define:vars={{
 			configHue,
