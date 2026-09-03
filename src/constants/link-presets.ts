@@ -19,4 +19,8 @@ export const LinkPresets: { [key in LinkPreset]: NavBarLink } = {
 		name: i18n(I18nKey.linkExchange),
 		url: "/linkexchange/",
 	},
+	[LinkPreset.Notes]: {
+		name: "随笔",
+		url: "/notes/",
+	},
 };
