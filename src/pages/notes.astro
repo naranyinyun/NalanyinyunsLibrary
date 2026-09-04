@@ -1,7 +1,7 @@
 ---
 import { getCollection, render } from "astro:content";
-import { Icon } from "astro-icon/components";
 import MainGridLayout from "@layouts/MainGridLayout.astro";
+import { Icon } from "astro-icon/components";
 
 const entries = await getCollection("notes", ({ data }) =>
 	import.meta.env.PROD ? data.draft !== true : true,
