@@ -4,10 +4,8 @@ published: 2026-09-30
 tags: [audio]
 category: 技术
 draft: false
+creationStatement: 使用 AI 辅助资料检索与背景整理，正文由作者独立完成。
 ---
-
-:::ai-disclosure{model="GPT-5.6 Luna" purpose="搜索资料、背景调查" scope="未涉及文本生成、文本润色"}
-:::
 
 ## 导论
 
