@@ -12,6 +12,7 @@ const postsCollection = defineCollection({
 		category: z.string().optional().default(""),
 		lang: z.string().optional().default(""),
 		author: z.string().nullable().default(""),
+	creationStatement: z.string().optional(),
 
 		/* For internal use */
 		prevTitle: z.string().default(""),
