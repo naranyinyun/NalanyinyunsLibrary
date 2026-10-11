@@ -1,5 +1,80 @@
 @tailwind components;
 
+.site-loader {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: grid;
+    place-items: center;
+    gap: 1rem;
+    align-content: center;
+    background: var(--page-bg);
+    color: var(--primary);
+    opacity: 1;
+    transition: opacity 320ms ease, visibility 320ms ease;
+}
+
+.site-loader.is-ready {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.site-loader__shape {
+    position: relative;
+    width: 4.75rem;
+    aspect-ratio: 1;
+    animation: site-loader-spin 1.8s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+    filter: drop-shadow(0 0.5rem 0.75rem color-mix(in srgb, var(--primary) 18%, transparent));
+}
+
+.site-loader__shape::after,
+.site-loader__slice {
+    position: absolute;
+    inset: 0;
+    display: block;
+    clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
+    content: "";
+}
+
+.site-loader__shape::after {
+    inset: 0.38rem;
+    background: var(--page-bg);
+}
+
+.site-loader__slice {
+    transform-origin: 50% 50%;
+}
+
+.site-loader__slice--one {
+    background: var(--primary);
+    clip-path: polygon(50% 0%, 93% 25%, 50% 50%);
+}
+
+.site-loader__slice--two {
+    background: color-mix(in srgb, var(--primary) 62%, white);
+    clip-path: polygon(93% 25%, 93% 75%, 50% 50%);
+}
+
+.site-loader__slice--three {
+    background: color-mix(in srgb, var(--primary) 34%, white);
+    clip-path: polygon(93% 75%, 50% 100%, 50% 50%);
+}
+
+.site-loader__label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+}
+
+@keyframes site-loader-spin {
+    to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .site-loader__shape { animation-duration: 3.6s; }
+}
+
 @layer components {
     .card-base {
         @apply rounded-[var(--radius-large)] overflow-hidden bg-[var(--card-bg)] transition;

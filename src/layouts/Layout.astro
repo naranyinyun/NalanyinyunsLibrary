@@ -142,8 +142,21 @@ const bannerOffset =
 			offset = offset - offset % 4;
 			document.documentElement.style.setProperty('--banner-height-extend', `${offset}px`);
 		</script>
-		<script is:inline>
-			if ("serviceWorker" in navigator) {
+			<script is:inline>
+				const hideSiteLoader = () => {
+					const siteLoader = document.getElementById("site-loader");
+					if (!siteLoader) return;
+					requestAnimationFrame(() => siteLoader.classList.add("is-ready"));
+				};
+				window.addEventListener("load", () => {
+					Promise.allSettled([
+						document.fonts?.ready,
+						navigator.serviceWorker?.ready,
+					]).then(hideSiteLoader);
+				}, { once: true });
+				setTimeout(hideSiteLoader, 1800);
+
+				if ("serviceWorker" in navigator) {
 				let reloadingForUpdate = false;
 
 				navigator.serviceWorker.addEventListener("controllerchange", () => {
@@ -173,10 +186,18 @@ const bannerOffset =
 		<Analytics />
 
 	</head>
-	<body class=" min-h-screen transition " class:list={[{"lg:is-home": isHomePage, "enable-banner": enableBanner}]}
-		  data-overlayscrollbars-initialize
-	>
-		<ConfigCarrier></ConfigCarrier>
+		<body class=" min-h-screen transition " class:list={[{"lg:is-home": isHomePage, "enable-banner": enableBanner}]}
+			  data-overlayscrollbars-initialize
+		>
+			<div id="site-loader" class="site-loader" role="status" aria-live="polite" aria-label="正在加载网站">
+				<div class="site-loader__shape" aria-hidden="true">
+					<span class="site-loader__slice site-loader__slice--one"></span>
+					<span class="site-loader__slice site-loader__slice--two"></span>
+					<span class="site-loader__slice site-loader__slice--three"></span>
+				</div>
+				<span class="site-loader__label">正在准备内容</span>
+			</div>
+			<ConfigCarrier></ConfigCarrier>
 		<slot />
 
 		<!-- increase the page height during page transition to prevent the scrolling animation from jumping -->
