@@ -71,7 +71,7 @@ def publishLatest(apiKey, segmentID, fromID, subject, content):
         "from": fromID,
         "subject": subject,
         "html": content,
-        "send": False
+        "send": True
     })
 
 judgemnent()
