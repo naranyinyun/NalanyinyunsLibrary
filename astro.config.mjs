@@ -75,7 +75,7 @@ export default defineConfig({
 		AstroPWA({
 			// Astro renders pages after Vite's HTML transform, so Layout.astro owns registration.
 			injectRegister: false,
-			registerType: "autoUpdate",
+			registerType: "prompt",
 			manifest: {
 				id: "/",
 				name: "Nalanyinyun's Library",
@@ -117,7 +117,7 @@ export default defineConfig({
 				],
 				maximumFileSizeToCacheInBytes: 8 * 1024 * 1024,
 				cleanupOutdatedCaches: true,
-				skipWaiting: true,
+				skipWaiting: false,
 				clientsClaim: true,
 			},
 		}),

@@ -142,25 +142,6 @@ const bannerOffset =
 			offset = offset - offset % 4;
 			document.documentElement.style.setProperty('--banner-height-extend', `${offset}px`);
 		</script>
-		<script is:inline>
-			if ("serviceWorker" in navigator) {
-				let reloadingForUpdate = false;
-
-				navigator.serviceWorker.addEventListener("controllerchange", () => {
-					if (!reloadingForUpdate) {
-						reloadingForUpdate = true;
-						window.location.reload();
-					}
-				});
-
-				window.addEventListener("load", () => {
-					navigator.serviceWorker
-						.register("/sw.js", { updateViaCache: "none" })
-						.then((registration) => registration.update())
-						.catch((error) => console.error("Unable to register the offline cache", error));
-				});
-			}
-		</script>
 		<style define:vars={{
 			configHue,
 			'page-width': `${PAGE_WIDTH}rem`,
@@ -176,6 +157,18 @@ const bannerOffset =
 	<body class=" min-h-screen transition " class:list={[{"lg:is-home": isHomePage, "enable-banner": enableBanner}]}
 		  data-overlayscrollbars-initialize
 	>
+		<div id="initial-loader" role="status" aria-label="页面加载中">
+			<div class="expressive-loader" aria-hidden="true">
+				<span></span><span></span><span></span><span></span>
+			</div>
+		</div>
+		<div id="pwa-update-toast" role="status" aria-live="polite" hidden>
+			<span>网站有新版本可用</span>
+			<div class="pwa-update-actions">
+				<button id="pwa-update-button" type="button">立即刷新</button>
+				<button id="pwa-update-dismiss" type="button" aria-label="关闭更新提示">稍后</button>
+			</div>
+		</div>
 		<ConfigCarrier></ConfigCarrier>
 		<slot />
 
@@ -185,11 +178,133 @@ const bannerOffset =
 	</body>
 </html>
 
+<script>
+	import { registerSW } from "virtual:pwa-register";
+
+	const loader = document.getElementById("initial-loader");
+	let loaderHidden = false;
+	const hideLoader = () => {
+		if (loaderHidden || !loader) return;
+		loaderHidden = true;
+		loader.classList.add("is-hidden");
+		window.setTimeout(() => loader.remove(), 350);
+	};
+
+	if (document.readyState === "complete") {
+		hideLoader();
+	} else {
+		window.addEventListener("load", hideLoader, { once: true });
+		window.setTimeout(hideLoader, 10000);
+	}
+
+	const updateToast = document.getElementById("pwa-update-toast");
+	const updateButton = document.getElementById("pwa-update-button");
+	const dismissButton = document.getElementById("pwa-update-dismiss");
+
+	const updateSW = registerSW({
+		immediate: true,
+		onNeedRefresh() {
+			updateToast?.removeAttribute("hidden");
+		},
+		onRegisteredSW(_swScriptUrl, registration) {
+			registration?.update();
+		},
+		onRegisterError(error) {
+			console.error("Unable to register the offline cache", error);
+		},
+	});
+
+	updateButton?.addEventListener("click", () => {
+		updateButton.setAttribute("disabled", "true");
+		updateButton.textContent = "正在刷新…";
+		void updateSW(true);
+	});
+	dismissButton?.addEventListener("click", () => updateToast?.setAttribute("hidden", "true"));
+</script>
+
 <style is:global define:vars={{
 	bannerOffset,
 	'banner-height-home': `${BANNER_HEIGHT_HOME}vh`,
 	'banner-height': `${BANNER_HEIGHT}vh`,
 }}>
+html:has(#initial-loader:not(.is-hidden)) {
+	background: var(--page-bg, #f8f7fa);
+}
+#initial-loader {
+	position: fixed;
+	inset: 0;
+	z-index: 10000;
+	display: grid;
+	place-items: center;
+	background: var(--page-bg, #f8f7fa);
+	opacity: 1;
+	transition: opacity 300ms ease;
+}
+#initial-loader.is-hidden {
+	opacity: 0;
+	pointer-events: none;
+}
+.expressive-loader {
+	position: relative;
+	width: 64px;
+	height: 64px;
+	animation: expressive-loader-rotate 1.8s cubic-bezier(.55, .1, .45, .9) infinite;
+}
+.expressive-loader span {
+	position: absolute;
+	top: 4px;
+	left: 21px;
+	width: 22px;
+	height: 32px;
+	border-radius: 5px;
+	clip-path: polygon(50% 0, 100% 35%, 72% 100%, 0 72%);
+	transform-origin: 11px 28px;
+	animation: expressive-loader-pulse 1.2s ease-in-out infinite alternate;
+}
+.expressive-loader span:nth-child(1) { background: var(--primary, #6750a4); transform: rotate(0deg); }
+.expressive-loader span:nth-child(2) { background: #d0bcff; transform: rotate(90deg); animation-delay: -.3s; }
+.expressive-loader span:nth-child(3) { background: #625b71; transform: rotate(180deg); animation-delay: -.6s; }
+.expressive-loader span:nth-child(4) { background: #e8def8; transform: rotate(270deg); animation-delay: -.9s; }
+@keyframes expressive-loader-rotate { to { transform: rotate(360deg); } }
+@keyframes expressive-loader-pulse { from { opacity: .55; scale: .78; } to { opacity: 1; scale: 1; } }
+#pwa-update-toast {
+	position: fixed;
+	left: 50%;
+	bottom: max(1.25rem, env(safe-area-inset-bottom));
+	z-index: 9999;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	width: min(32rem, calc(100vw - 2rem));
+	padding: .9rem 1rem;
+	border: 1px solid color-mix(in srgb, var(--primary, #6750a4) 22%, transparent);
+	border-radius: 1.25rem;
+	background: var(--card-bg, #f3f0f7);
+	color: var(--text-color, #1d1b20);
+	box-shadow: 0 8px 28px rgb(0 0 0 / 16%);
+	transform: translateX(-50%);
+}
+#pwa-update-toast[hidden] { display: none; }
+.pwa-update-actions { display: flex; align-items: center; gap: .5rem; flex-shrink: 0; }
+.pwa-update-actions button {
+	padding: .55rem .85rem;
+	border: 0;
+	border-radius: 999px;
+	background: var(--primary, #6750a4);
+	color: white;
+	cursor: pointer;
+}
+.pwa-update-actions button:last-child { background: transparent; color: inherit; }
+.pwa-update-actions button:disabled { opacity: .65; cursor: wait; }
+@media (max-width: 480px) {
+	#pwa-update-toast { align-items: flex-start; flex-direction: column; gap: .65rem; }
+	.pwa-update-actions { align-self: flex-end; }
+}
+@media (prefers-reduced-motion: reduce) {
+	.expressive-loader, .expressive-loader span { animation-duration: 3s; }
+}
+
 @tailwind components;
 @layer components {
 	.enable-banner.is-home #banner-wrapper {

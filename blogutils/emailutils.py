@@ -55,7 +55,7 @@ def generateEmailContent(rss):
       <p style="margin:0 0 16px;color:#666;"><strong>日期：</strong>{pubDate}</p>
       <hr style="height:0;border:0;border-top:1px solid #ddd;margin:0 0 16px;">
       <div style="margin:0 0 16px;white-space:normal;overflow-wrap:anywhere;">{description}</div>
-      <p style="margin:0 0 24px;"><a href="{link}" style="color:#333;">阅读全文</a></p>
+      <p style="margin:0 0 24px;"><a href="{link}" style="color:#333;">点击此处阅读全文</a></p>
       <p style="margin:0;color:#666;font-size:12px;">退订见：
         <a href="{{{{{{RESEND_UNSUBSCRIBE_URL}}}}}}" style="color:#555;">点击此处退订</a>
       </p>
