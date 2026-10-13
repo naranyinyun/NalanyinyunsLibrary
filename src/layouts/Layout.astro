@@ -157,16 +157,18 @@ const bannerOffset =
 	<body class=" min-h-screen transition " class:list={[{"lg:is-home": isHomePage, "enable-banner": enableBanner}]}
 		  data-overlayscrollbars-initialize
 	>
-		<div id="initial-loader" role="status" aria-label="页面加载中">
-			<div class="expressive-loader" aria-hidden="true">
-				<span></span><span></span><span></span><span></span>
-			</div>
+		<div id="initial-loader" role="status" aria-label="正在加载页面">
+			<div class="material-loader" aria-hidden="true"><span></span></div>
+			<span class="loader-label">正在加载</span>
 		</div>
-		<div id="pwa-update-toast" role="status" aria-live="polite" hidden>
-			<span>网站有新版本可用</span>
+		<div id="pwa-update-toast" role="region" aria-live="polite" aria-label="网站更新" hidden>
+			<div class="pwa-update-copy">
+				<strong>发现新版本</strong>
+				<span>刷新页面即可使用最新内容</span>
+			</div>
 			<div class="pwa-update-actions">
 				<button id="pwa-update-button" type="button">立即刷新</button>
-				<button id="pwa-update-dismiss" type="button" aria-label="关闭更新提示">稍后</button>
+				<button id="pwa-update-dismiss" type="button">稍后</button>
 			</div>
 		</div>
 		<ConfigCarrier></ConfigCarrier>
@@ -244,48 +246,82 @@ html:has(#initial-loader:not(.is-hidden)) {
 	opacity: 0;
 	pointer-events: none;
 }
-.expressive-loader {
+.material-loader {
 	position: relative;
-	width: 64px;
-	height: 64px;
-	animation: expressive-loader-rotate 1.8s cubic-bezier(.55, .1, .45, .9) infinite;
+	width: 48px;
+	height: 48px;
 }
-.expressive-loader span {
+.material-loader span {
 	position: absolute;
-	top: 4px;
-	left: 21px;
-	width: 22px;
-	height: 32px;
-	border-radius: 5px;
-	clip-path: polygon(50% 0, 100% 35%, 72% 100%, 0 72%);
-	transform-origin: 11px 28px;
-	animation: expressive-loader-pulse 1.2s ease-in-out infinite alternate;
+	inset: 5px;
+	background: var(--primary, #6750a4);
+	clip-path: polygon(50% 4.9%, 55.8% 28.2%, 61.3% 30.5%, 81.9% 18.1%, 69.5% 38.7%, 71.8% 44.2%, 95.1% 50%, 71.8% 55.8%, 69.5% 61.3%, 81.9% 81.9%, 61.3% 69.5%, 55.8% 71.8%, 50% 95.1%, 44.2% 71.8%, 38.7% 69.5%, 18.1% 81.9%, 30.5% 61.3%, 28.2% 55.8%, 4.9% 50%, 28.2% 44.2%, 30.5% 38.7%, 18.1% 18.1%, 38.7% 30.5%, 44.2% 28.2%);
+	filter: blur(.45px);
+	animation: material-loader-morph 4.6s linear infinite;
+	transform-origin: center;
 }
-.expressive-loader span:nth-child(1) { background: var(--primary, #6750a4); transform: rotate(0deg); }
-.expressive-loader span:nth-child(2) { background: #d0bcff; transform: rotate(90deg); animation-delay: -.3s; }
-.expressive-loader span:nth-child(3) { background: #625b71; transform: rotate(180deg); animation-delay: -.6s; }
-.expressive-loader span:nth-child(4) { background: #e8def8; transform: rotate(270deg); animation-delay: -.9s; }
-@keyframes expressive-loader-rotate { to { transform: rotate(360deg); } }
-@keyframes expressive-loader-pulse { from { opacity: .55; scale: .78; } to { opacity: 1; scale: 1; } }
+.loader-label { margin-top: 1rem; color: var(--text-color, #49454f); font-size: .875rem; }
+@keyframes material-loader-morph {
+	0%, 100% {
+		clip-path: polygon(50% 4.9%, 55.8% 28.2%, 61.3% 30.5%, 81.9% 18.1%, 69.5% 38.7%, 71.8% 44.2%, 95.1% 50%, 71.8% 55.8%, 69.5% 61.3%, 81.9% 81.9%, 61.3% 69.5%, 55.8% 71.8%, 50% 95.1%, 44.2% 71.8%, 38.7% 69.5%, 18.1% 81.9%, 30.5% 61.3%, 28.2% 55.8%, 4.9% 50%, 28.2% 44.2%, 30.5% 38.7%, 18.1% 18.1%, 38.7% 30.5%, 44.2% 28.2%);
+		transform: rotate(0deg);
+		animation-timing-function: cubic-bezier(.22, 1.65, .36, 1);
+	}
+	14.28% {
+		clip-path: polygon(50% 11.5%, 61.1% 8.6%, 66.2% 21.9%, 80.3% 19.7%, 83.4% 30.7%, 83.1% 41.1%, 94.7% 50%, 83.1% 58.9%, 83.4% 69.3%, 80.3% 80.3%, 66.2% 78.1%, 61.1% 91.4%, 50% 88.5%, 41.1% 83.1%, 27.7% 88.7%, 25.8% 74.2%, 16.6% 69.3%, 8.6% 61.1%, 17.6% 50%, 8.6% 38.9%, 16.6% 30.7%, 25.8% 25.8%, 27.7% 11.3%, 41.1% 16.9%);
+		transform: rotate(90deg);
+		animation-timing-function: cubic-bezier(.22, 1.65, .36, 1);
+	}
+	28.56% {
+		clip-path: polygon(50% 16.2%, 60.9% 9.4%, 69% 17%, 69.7% 30.3%, 73% 36.7%, 84.8% 40.7%, 92.3% 50%, 84.8% 59.3%, 73% 63.3%, 69.7% 69.7%, 69% 83%, 60.9% 90.6%, 50% 83.8%, 43.4% 74.8%, 35.2% 75.6%, 21.8% 78.2%, 14.3% 70.6%, 19.4% 58.2%, 24.6% 50%, 19.4% 41.8%, 14.3% 29.4%, 21.8% 21.8%, 35.2% 24.4%, 43.4% 25.2%);
+		transform: rotate(180deg);
+		animation-timing-function: cubic-bezier(.22, 1.65, .36, 1);
+	}
+	42.84% {
+		clip-path: polygon(50% 19.4%, 58.1% 19.9%, 66.5% 21.5%, 75.5% 24.5%, 84.7% 29.9%, 92.7% 38.6%, 96.1% 50%, 92.7% 61.4%, 84.7% 70.1%, 75.5% 75.5%, 66.5% 78.5%, 58.1% 80.1%, 50% 80.5%, 41.9% 80.1%, 33.5% 78.5%, 24.5% 75.5%, 15.3% 70.1%, 7.3% 61.4%, 3.9% 50%, 7.3% 38.6%, 15.3% 29.9%, 24.5% 24.5%, 33.5% 21.5%, 41.9% 19.9%);
+		transform: rotate(270deg);
+		animation-timing-function: cubic-bezier(.22, 1.65, .36, 1);
+	}
+	57.12% {
+		clip-path: polygon(50% 6.3%, 57.7% 21.4%, 64.8% 24.4%, 80.9% 19.1%, 75.6% 35.2%, 78.6% 42.3%, 93.7% 50%, 78.6% 57.7%, 75.6% 64.8%, 80.9% 80.9%, 64.8% 75.6%, 57.7% 78.6%, 50% 93.7%, 42.3% 78.6%, 35.2% 75.6%, 19.1% 80.9%, 24.4% 64.8%, 21.4% 57.7%, 6.3% 50%, 21.4% 42.3%, 24.4% 35.2%, 19.1% 19.1%, 35.2% 24.4%, 42.3% 21.4%);
+		transform: rotate(360deg);
+		animation-timing-function: cubic-bezier(.22, 1.65, .36, 1);
+	}
+	71.4% {
+		clip-path: polygon(50% 5.4%, 60.9% 9.4%, 68.4% 18%, 74.3% 25.7%, 82% 31.6%, 90.6% 39.1%, 94.7% 50%, 90.6% 60.9%, 82% 68.4%, 74.3% 74.3%, 68.4% 82%, 60.9% 90.6%, 50% 94.7%, 39.1% 90.6%, 31.6% 82%, 25.7% 74.3%, 18% 68.4%, 9.4% 60.9%, 5.4% 50%, 9.4% 39.1%, 18% 31.6%, 25.7% 25.7%, 31.6% 18%, 39.1% 9.4%);
+		transform: rotate(450deg);
+		animation-timing-function: cubic-bezier(.22, 1.65, .36, 1);
+	}
+	85.68% {
+		clip-path: polygon(50% 3.9%, 61.6% 6.9%, 70.7% 14.2%, 76.8% 23.2%, 80.4% 32.4%, 82.3% 41.3%, 82.9% 50%, 82.3% 58.7%, 80.4% 67.6%, 76.8% 76.8%, 70.7% 85.8%, 61.6% 93.1%, 50% 96.1%, 38.4% 93.1%, 29.3% 85.8%, 23.2% 76.8%, 19.6% 67.6%, 17.7% 58.7%, 17.1% 50%, 17.7% 41.3%, 19.6% 32.4%, 23.2% 23.2%, 29.3% 14.2%, 38.4% 6.9%);
+		transform: rotate(540deg);
+		animation-timing-function: cubic-bezier(.22, 1.65, .36, 1);
+	}
+}
 #pwa-update-toast {
 	position: fixed;
 	left: 50%;
-	bottom: max(1.25rem, env(safe-area-inset-bottom));
+	bottom: 0;
 	z-index: 9999;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	gap: 1rem;
-	width: min(32rem, calc(100vw - 2rem));
-	padding: .9rem 1rem;
-	border: 1px solid color-mix(in srgb, var(--primary, #6750a4) 22%, transparent);
-	border-radius: 1.25rem;
+	gap: 1.5rem;
+	width: min(44rem, 100vw);
+	padding: 1.25rem 1.5rem calc(1.25rem + env(safe-area-inset-bottom));
+	border: 1px solid color-mix(in srgb, var(--primary, #6750a4) 18%, transparent);
+	border-bottom: 0;
+	border-radius: 1.5rem 1.5rem 0 0;
 	background: var(--card-bg, #f3f0f7);
 	color: var(--text-color, #1d1b20);
-	box-shadow: 0 8px 28px rgb(0 0 0 / 16%);
-	transform: translateX(-50%);
+	box-shadow: 0 -8px 32px rgb(0 0 0 / 14%);
+	transform: translate(-50%, 0);
+	animation: update-sheet-enter 280ms cubic-bezier(.2, .8, .2, 1) both;
 }
 #pwa-update-toast[hidden] { display: none; }
+.pwa-update-copy { display: grid; gap: .25rem; }
+.pwa-update-copy strong { font-size: 1rem; font-weight: 600; }
+.pwa-update-copy span { color: color-mix(in srgb, currentColor 72%, transparent); font-size: .875rem; }
 .pwa-update-actions { display: flex; align-items: center; gap: .5rem; flex-shrink: 0; }
 .pwa-update-actions button {
 	padding: .55rem .85rem;
@@ -298,12 +334,13 @@ html:has(#initial-loader:not(.is-hidden)) {
 .pwa-update-actions button:last-child { background: transparent; color: inherit; }
 .pwa-update-actions button:disabled { opacity: .65; cursor: wait; }
 @media (max-width: 480px) {
-	#pwa-update-toast { align-items: flex-start; flex-direction: column; gap: .65rem; }
-	.pwa-update-actions { align-self: flex-end; }
+	#pwa-update-toast { align-items: stretch; flex-direction: column; gap: 1rem; padding-inline: 1.25rem; }
+	.pwa-update-actions { justify-content: flex-end; }
 }
 @media (prefers-reduced-motion: reduce) {
-	.expressive-loader, .expressive-loader span { animation-duration: 3s; }
+	.material-loader span, #pwa-update-toast { animation-duration: 3s; }
 }
+@keyframes update-sheet-enter { from { opacity: 0; transform: translate(-50%, 100%); } to { opacity: 1; transform: translate(-50%, 0); } }
 
 @tailwind components;
 @layer components {
