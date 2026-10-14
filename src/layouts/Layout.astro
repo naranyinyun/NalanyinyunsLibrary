@@ -20,7 +20,6 @@ import {
 import { defaultFavicons } from "../constants/icon";
 import type { Favicon } from "../types/config";
 import { pathsEqual, url } from "../utils/url-utils";
-import "katex/dist/katex.css";
 
 interface Props {
 	title?: string;
@@ -464,7 +463,7 @@ function loadHue() {
 	setHue(getHue())
 }
 
-function initCustomScrollbar() {
+async function initCustomScrollbar() {
 	const bodyElement = document.querySelector('body');
 	if (!bodyElement) return;
 	OverlayScrollbars(
@@ -485,6 +484,9 @@ function initCustomScrollbar() {
 	});
 
 	const katexElements = document.querySelectorAll('.katex-display') as NodeListOf<HTMLElement>;
+	if (katexElements.length > 0) {
+		await import("katex/dist/katex.css");
+	}
 
 	const katexObserverOptions = {
 		root: null,
@@ -684,12 +686,13 @@ window.onresize = () => {
 
 <script>
 import PhotoSwipeLightbox from "photoswipe/lightbox"
-import "photoswipe/style.css"
 
 let lightbox: PhotoSwipeLightbox
 let pswp = import("photoswipe")
 
-function createPhotoSwipe() {
+async function createPhotoSwipe() {
+	if (!document.querySelector(".custom-md img, #post-cover img")) return;
+	await import("photoswipe/style.css");
 	lightbox = new PhotoSwipeLightbox({
 		gallery: ".custom-md img, #post-cover img",
 		pswpModule: () => pswp,
