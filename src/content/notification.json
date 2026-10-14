@@ -1,11 +1,11 @@
 {
 	"id": "notification-v1",
 	"enabled": true,
-	"message": "AnimeSearch 服务上线，欢迎使用！",
+	"message": "Fuwaffin'girl - Yu-dachi\nNever Forget Vaction 5",
 	"buttons": [
 		{
-			"text": "Goto",
-			"url": "https://dmhy.nalanyinyun.work/"
+			"text": "Play",
+			"url": "https://music.apple.com/us/song/fuwaffingirl/1849571404"
 		}
 	]
 }
