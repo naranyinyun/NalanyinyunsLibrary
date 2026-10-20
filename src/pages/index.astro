@@ -1,0 +1,199 @@
+---
+import { getImage, type ImageMetadata } from "astro:assets";
+import { siteConfig } from "../config";
+import Layout from "../layouts/Layout.astro";
+import { getSortedPostsList } from "../utils/content-utils";
+import { formatDateToYYYYMMDD } from "../utils/date-utils";
+import { getPostUrlBySlug, url } from "../utils/url-utils";
+
+const posts = (await getSortedPostsList())
+	.sort((a, b) => {
+		const dateA = a.data.updated ?? a.data.published;
+		const dateB = b.data.updated ?? b.data.published;
+		return dateB.getTime() - dateA.getTime();
+	})
+	.slice(0, 3);
+
+const images = import.meta.glob<ImageMetadata>("../assets/**/*", {
+	import: "default",
+	eager: true,
+});
+const heroImage = images[`../${siteConfig.banner.src}`];
+const hero = heroImage
+	? await getImage({ src: heroImage, width: 2400, format: "webp" })
+	: undefined;
+---
+
+<Layout title={siteConfig.title} description={siteConfig.subtitle}>
+	<main
+		class="landing"
+		style={hero ? `--landing-image: url('${hero.src}')` : undefined}
+	>
+		<div class="landing-shade" aria-hidden="true"></div>
+		<section class="landing-copy" aria-label="博客介绍">
+			<p class="landing-eyebrow">NALANYINYUN GAKUEN</p>
+			<h1>{siteConfig.title}</h1>
+			<p class="landing-intro">{siteConfig.subtitle}</p>
+
+			<div class="landing-recent">
+				<h2>最近更新</h2>
+				<ul>
+					{posts.map((post) => {
+						const date = post.data.updated ?? post.data.published;
+						return (
+							<li>
+								<a href={getPostUrlBySlug(post.slug)}>{post.data.title}</a>
+								<time datetime={formatDateToYYYYMMDD(date)}>{formatDateToYYYYMMDD(date)}</time>
+							</li>
+						);
+					})}
+				</ul>
+			</div>
+
+			<a class="landing-enter" href={url("/blog/")}>
+				<span>进入博客</span>
+			</a>
+		</section>
+	</main>
+</Layout>
+
+<style>
+	.landing {
+		position: relative;
+		isolation: isolate;
+		display: flex;
+		min-height: 100svh;
+		align-items: flex-end;
+		padding: clamp(2rem, 6vw, 6rem);
+		color: #fff;
+		background-color: #20262a;
+		background-image: var(--landing-image);
+		background-position: center;
+		background-size: cover;
+	}
+
+	.landing-shade {
+		position: absolute;
+		z-index: -1;
+		inset: 0;
+		background: linear-gradient(90deg, rgb(7 13 17 / 74%) 0%, rgb(7 13 17 / 40%) 48%, rgb(7 13 17 / 6%) 100%),
+			linear-gradient(0deg, rgb(7 13 17 / 40%), transparent 65%);
+	}
+
+	.landing-copy {
+		width: min(100%, 32rem);
+		margin-bottom: 0;
+		font-size: 1rem;
+		text-shadow: 0 1px 18px rgb(0 0 0 / 24%);
+	}
+
+	@media (min-width: 768px) {
+		.landing-copy {
+			border: 1px solid rgb(255 255 255 / 14%);
+			border-radius: 0.85rem;
+			padding: 1.25rem 1.5rem;
+			background: rgb(10 16 20 / 18%);
+			backdrop-filter: blur(7px);
+			-webkit-backdrop-filter: blur(7px);
+		}
+	}
+
+	.landing-eyebrow {
+		margin: 0 0 1rem;
+		font-size: 0.68rem;
+		letter-spacing: 0.22em;
+		opacity: 0.78;
+	}
+
+	.landing h1 {
+		margin: 0;
+		font-size: clamp(2.2rem, 5.4vw, 3.9rem);
+		font-weight: 500;
+		letter-spacing: -0.025em;
+		line-height: 1.16;
+	}
+
+	.landing-intro {
+		margin: 0.8rem 0 2.3rem;
+		font-size: 1rem;
+		letter-spacing: 0.04em;
+		opacity: 0.86;
+	}
+
+	.landing-recent h2 {
+		margin: 0 0 0.65rem;
+		font-size: 0.72rem;
+		font-weight: 400;
+		letter-spacing: 0.14em;
+		opacity: 0.68;
+	}
+
+	.landing-recent ul {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.landing-recent li {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 1.5rem;
+		border-bottom: 1px solid rgb(255 255 255 / 22%);
+		padding: 0.58rem 0;
+	}
+
+	.landing-recent a {
+		overflow: hidden;
+		color: inherit;
+		font-size: 1rem;
+		text-decoration: none;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.landing-recent a:hover {
+		opacity: 0.75;
+	}
+
+	.landing-recent time {
+		flex: none;
+		font-family: "JetBrains Mono", monospace;
+		font-size: 0.68rem;
+		opacity: 0.7;
+	}
+
+	.landing-enter {
+		display: inline-flex;
+		align-items: center;
+		gap: 1.2rem;
+		margin-top: 1.8rem;
+		border-bottom: 1px solid rgb(255 255 255 / 65%);
+		padding: 0 0 0.5rem;
+		color: inherit;
+		font-size: 0.92rem;
+		letter-spacing: 0.08em;
+		text-decoration: none;
+		transition: gap 180ms ease, opacity 180ms ease;
+	}
+
+	.landing-enter:hover {
+		gap: 1.65rem;
+		opacity: 0.78;
+	}
+
+	@media (max-width: 520px) {
+		.landing {
+			padding: 1.25rem;
+			background-position: 58% center;
+		}
+
+		.landing-shade {
+			background: linear-gradient(0deg, rgb(7 13 17 / 82%) 0%, rgb(7 13 17 / 52%) 48%, rgb(7 13 17 / 12%) 100%);
+		}
+
+		.landing-recent li {
+			gap: 0.75rem;
+		}
+	}
+</style>
