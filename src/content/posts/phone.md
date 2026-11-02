@@ -3,7 +3,6 @@ title: 我们购买的设备，真的属于我们吗？来自普通消费者的�
 published: 2026-10-24
 tags: [insight]
 category: '洞察'
-draft: true
 creationStatement: "本文使用 AI 搜集资料，修改文本以及整理和梳理内容，不涉及文本生成"
 author: "Nalanyinyun、ChatGPT"
 ---
