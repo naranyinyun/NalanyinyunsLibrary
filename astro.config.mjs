@@ -36,7 +36,10 @@ const postDirectory = new URL("./src/content/posts/", import.meta.url);
 
 function getLatestPostCachePaths() {
 	const posts = [];
-	const files = readdirSync(postDirectory, { recursive: true, withFileTypes: true });
+	const files = readdirSync(postDirectory, {
+		recursive: true,
+		withFileTypes: true,
+	});
 
 	for (const file of files) {
 		if (!file.isFile() || !/\.mdx?$/.test(file.name)) continue;
@@ -110,7 +113,10 @@ export default defineConfig({
 					async (entries) => ({
 						manifest: entries.filter((entry) => {
 							const entryPath = decodeURI(entry.url).replace(/^\//, "");
-							return !entryPath.startsWith("posts/") || latestPostCachePaths.has(entryPath);
+							return (
+								!entryPath.startsWith("posts/") ||
+								latestPostCachePaths.has(entryPath)
+							);
 						}),
 						warnings: [],
 					}),
