@@ -1,0 +1,88 @@
+---
+import path from "node:path";
+import { Icon } from "astro-icon/components";
+import MainGridLayout from "../layouts/MainGridLayout.astro";
+import { musicRecommendations } from "../data/presenting-now";
+import { getImagePalette } from "../utils/image-palette";
+
+const latest = musicRecommendations[0];
+const previousRecommendations = musicRecommendations.slice(1);
+const heroPalette = latest
+	? await getImagePalette(path.join(process.cwd(), "public", latest.artwork.replace(/^\/+/, "")))
+	: ["#153c52", "#49304f", "#171421"];
+const heroBackground = `radial-gradient(ellipse at 12% 12%, color-mix(in srgb, var(--palette-a) 90%, transparent) 0%, transparent 52%), radial-gradient(ellipse at 88% 8%, color-mix(in srgb, var(--palette-b) 82%, transparent) 0%, transparent 48%), linear-gradient(132deg, var(--palette-c), #101017 88%)`;
+const heroStyle = `--palette-a: ${heroPalette[0]}; --palette-b: ${heroPalette[1]}; --palette-c: ${heroPalette[2]}; background: ${heroBackground};`;
+
+function formatDate(value: string) {
+	return new Intl.DateTimeFormat("zh-CN", {
+		year: "numeric",
+		month: "long",
+		day: "numeric",
+	}).format(new Date(`${value}T00:00:00`));
+}
+---
+
+<MainGridLayout title="Presenting NOW">
+	<div class="space-y-10 md:space-y-14">
+		<header style={heroStyle} class="relative overflow-hidden rounded-[var(--radius-large)] px-6 pb-7 pt-6 text-white md:px-10 md:pb-10 md:pt-8">
+			<div class="relative z-10 flex items-center justify-between gap-4 border-b border-white/20 pb-4 text-xs font-bold uppercase tracking-[0.22em] md:text-sm">
+				<h1 class="m-0 text-xs font-bold uppercase tracking-[0.22em] md:text-sm">Presenting <span class="text-white/55">NOW</span></h1>
+			</div>
+			<div class="relative z-10 -ml-1 py-3 md:py-5">
+				<div class="origin-left -skew-x-6 font-black italic leading-[0.78] tracking-[-0.09em] text-[clamp(4rem,15vw,11rem)]">
+					Introducing
+				</div>
+			</div>
+			<div class="relative z-10 grid gap-7 border-t border-white/20 pt-6 md:grid-cols-[minmax(0,1fr)_minmax(15rem,0.72fr)] md:items-end md:gap-10 md:pt-8">
+				<div class="min-w-0">
+					{latest && (
+						<>
+							<p class="mb-3 text-xs font-bold uppercase tracking-[0.2em] text-white/60">最新推荐</p>
+							<h2 class="mb-2 break-words text-4xl font-black leading-[0.98] tracking-tight md:text-6xl">{latest.title}</h2>
+							<p class="mb-6 text-base font-medium text-white/75 md:text-lg">{latest.album} <span class="px-1 text-white/40">/</span> {latest.artist}</p>
+							{latest.recommendedAt && <p class="mb-5 text-sm text-white/65">推荐于 {formatDate(latest.recommendedAt)}</p>}
+							{latest.reason && <p class="mb-6 max-w-xl text-base leading-relaxed text-white/80">{latest.reason}</p>}
+							<a href={latest.url} target="_blank" rel="noreferrer" class="inline-flex h-12 items-center gap-2 rounded-full bg-white px-5 text-sm font-bold text-black transition hover:-translate-y-0.5 hover:bg-white/85">
+								在 Apple Music 收听
+								<Icon name="material-symbols:arrow-outward-rounded" class="text-lg" />
+							</a>
+						</>
+					)}
+				</div>
+				{latest && (
+					<a href={latest.url} target="_blank" rel="noreferrer" aria-label={`在 Apple Music 收听 ${latest.title}`} class="group relative block aspect-square overflow-hidden rounded-2xl bg-black/10 shadow-[14px_14px_0_rgba(0,0,0,0.12)] md:ml-auto md:w-full md:max-w-[26rem]">
+						<img src={latest.artwork} alt={`${latest.album} 封面`} loading="eager" class="h-full w-full object-cover transition duration-500 group-hover:scale-[1.04]" />
+						<div class="absolute inset-0 flex items-end justify-between bg-gradient-to-t from-black/55 via-transparent to-transparent p-4 text-white opacity-90">
+							<Icon name="material-symbols:play-circle-rounded" class="text-4xl" />
+						</div>
+					</a>
+				)}
+			</div>
+		</header>
+
+		{previousRecommendations.length > 0 && (
+			<section aria-labelledby="previous-recommendations">
+				<div class="mb-5 flex items-end justify-between gap-4 border-b border-black/10 pb-3 dark:border-white/15">
+					<h2 id="previous-recommendations" class="m-0 text-xl font-bold tracking-tight">以前推荐</h2>
+				</div>
+				<div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+					{previousRecommendations.map((recommendation) => (
+						<article class="group flex min-w-0 gap-4 rounded-2xl border border-black/10 bg-[var(--card-bg)] p-4 transition hover:-translate-y-1 hover:border-[var(--primary)]/50 dark:border-white/10">
+							<a href={recommendation.url} target="_blank" rel="noreferrer" aria-label={`在 Apple Music 收听 ${recommendation.title}`} class="h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-black/5">
+								<img src={recommendation.artwork} alt={`${recommendation.album} 封面`} loading="lazy" class="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
+							</a>
+							<div class="flex min-w-0 flex-col justify-center">
+								<h3 class="mb-1 truncate text-base font-bold text-90">{recommendation.title}</h3>
+								<p class="mb-1 truncate text-sm text-60">{recommendation.album}</p>
+								<p class="mb-2 truncate text-sm text-50">{recommendation.artist}</p>
+								{recommendation.recommendedAt && <p class="mb-1 text-xs text-40">推荐于 {formatDate(recommendation.recommendedAt)}</p>}
+								{recommendation.reason && <p class="mb-2 line-clamp-2 text-xs leading-relaxed text-60">{recommendation.reason}</p>}
+								<a href={recommendation.url} target="_blank" rel="noreferrer" class="inline-flex items-center gap-1 text-xs font-bold text-[var(--primary)]">收听 <Icon name="material-symbols:arrow-outward-rounded" /></a>
+							</div>
+						</article>
+					))}
+				</div>
+			</section>
+		)}
+	</div>
+</MainGridLayout>

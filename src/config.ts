@@ -47,6 +47,7 @@ export const navBarConfig: NavBarConfig = {
 		LinkPreset.Home,
 		LinkPreset.Notes,
 		LinkPreset.About,
+		{ name: "Presenting NOW", url: "/presenting-now/" },
 		LinkPreset.LinkExchange,
 	],
 };
