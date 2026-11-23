@@ -67,9 +67,12 @@ image: ./cover.jpg
 tags: [Foo, Bar]
 category: Front-end
 draft: false
+featured: false # 设为 true 后会出现在“只看精选”列表；不属于文章标签
 lang: jp      # 仅当文章语言与 `config.ts` 中的网站语言不同时需要设置
 ---
 ```
+
+`featured` 是可选的布尔字段，默认值为 `false`。设为 `true` 可将文章加入首页的精选文章列表。
 
 ## 🧞 指令
 

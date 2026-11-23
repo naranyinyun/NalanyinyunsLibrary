@@ -4,6 +4,7 @@ published: 2026-08-07
 tags: [novel]
 category: '花丛'
 draft: false 
+featured: true
 ---
 我把一直放在抽屉里的风铃挂在了窗户边上，趁着这还是一个风季。
 

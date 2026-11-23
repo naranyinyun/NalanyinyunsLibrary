@@ -1,0 +1,19 @@
+---
+import FeaturedFilter from "../components/FeaturedFilter.astro";
+import PostPage from "../components/PostPage.astro";
+import MainGridLayout from "../layouts/MainGridLayout.astro";
+import { getSortedPosts } from "../utils/content-utils";
+
+const featuredPosts = (await getSortedPosts()).filter((post) => post.data.featured);
+---
+
+<MainGridLayout title="精选文章">
+	<FeaturedFilter active />
+	{featuredPosts.length > 0 ? (
+		<PostPage entries={featuredPosts} />
+	) : (
+		<div class="card-base px-6 py-8 text-center text-75">
+			还没有精选文章。将文章 frontmatter 中的 `featured` 设为 `true` 后，它会显示在这里。
+		</div>
+	)}
+</MainGridLayout>

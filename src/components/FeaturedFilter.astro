@@ -1,0 +1,35 @@
+---
+import { Icon } from "astro-icon/components";
+
+interface Props {
+	active?: boolean;
+}
+
+const { active = false } = Astro.props;
+---
+
+<nav aria-label="文章筛选" class="mb-4 flex items-center justify-end">
+	<div class="inline-flex rounded-xl bg-[var(--card-bg)] p-1" role="group" aria-label="文章范围">
+		<a
+			href="/"
+			aria-current={!active ? "page" : undefined}
+			class:list={[
+				"btn-plain rounded-lg px-4 py-2 text-sm transition-colors",
+				{ "!bg-[var(--primary)] !text-white dark:!text-black/70": !active },
+			]}
+		>
+			全部文章
+		</a>
+		<a
+			href="/featured/"
+			aria-current={active ? "page" : undefined}
+			class:list={[
+				"btn-plain flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm transition-colors",
+				{ "!bg-[var(--primary)] !text-white dark:!text-black/70": active },
+			]}
+		>
+			<Icon name="material-symbols:bookmark-rounded" class="text-base" />
+			只看精选
+		</a>
+	</div>
+</nav>
