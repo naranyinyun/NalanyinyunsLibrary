@@ -1,7 +1,7 @@
 {
 	"id": "notification-v1",
 	"enabled": true,
-	"message": "Fuwaffin'girl - Yu-dachi\nNever Forget Vaction 5",
+	"message": "更新电子邮件订阅系统和网站架构中，重复的邮件最近可能频发，还请见谅。",
 	"buttons": [
 		{
 			"text": "Play",
