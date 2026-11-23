@@ -19,7 +19,7 @@
         "@iconify-json/fa6-brands": "^1.2.6",
         "@iconify-json/fa6-regular": "^1.2.4",
         "@iconify-json/fa6-solid": "^1.2.4",
-        "@iconify-json/material-symbols": "^1.2.100",
+        "@iconify-json/material-symbols": "^1.2.101",
         "@iconify/svelte": "^4.2.0",
         "@swup/astro": "^1.8.0",
         "@tailwindcss/typography": "^0.5.20",
@@ -35,7 +35,7 @@
         "katex": "^0.19.1",
         "markdown-it": "^14.3.3",
         "mdast-util-to-string": "^4.0.0",
-        "overlayscrollbars": "^2.17.0",
+        "overlayscrollbars": "^2.17.1",
         "pagefind": "^1.6.0",
         "photoswipe": "^5.4.4",
         "reading-time": "^1.5.0",
@@ -439,7 +439,7 @@
 
     "@iconify-json/fa6-solid": ["@iconify-json/fa6-solid@1.2.4", "", { "dependencies": { "@iconify/types": "2.0.0" } }, "sha512-LmDNNdJVyvF5mPm1yxWvL8KjCc/E8LzoqnF1LNTVpyY2ZJRUlGOWuPIThdbuFBF2IovgttkIyumhyqfmlHdwKg=="],
 
-    "@iconify-json/material-symbols": ["@iconify-json/material-symbols@1.2.100", "", { "dependencies": { "@iconify/types": "*" } }, "sha512-lo3JulvaCnCCYVZHfld4kQ2YNkN55xCtLGplVgETx0n6nRR8IknMphknSqIpFhT/4J3upZJmLBTQT6cyQn8ThQ=="],
+    "@iconify-json/material-symbols": ["@iconify-json/material-symbols@1.2.101", "", { "dependencies": { "@iconify/types": "*" } }, "sha512-k2cOWfrsLM9TpCr34UZ34toSotApzFDxh+DX7tVk4EkqO2XhoiuDPs1oAbiZSJQQ3JHjhkS9kBlMFa36yYda0Q=="],
 
     "@iconify/svelte": ["@iconify/svelte@4.2.0", "", { "dependencies": { "@iconify/types": "2.0.0" }, "peerDependencies": { "svelte": "5.56.8" } }, "sha512-fEl0T7SAPonK7xk6xUlRPDmFDZVDe2Z7ZstlqeDS/sS8ve2uyU+Qa8rTWbIqzZJlRvONkK5kVXiUf9nIc+6OOQ=="],
 
@@ -1595,7 +1595,7 @@
 
     "opencollective-postinstall": ["opencollective-postinstall@2.0.3", "", { "bin": { "opencollective-postinstall": "index.js" } }, "sha512-8AV/sCtuzUeTo8gQK5qDZzARrulB3egtLzFgteqB2tcT4Mw7B8Kt7JcDHmltjz6FOAHsvTevk70gZEbhM4ZS9Q=="],
 
-    "overlayscrollbars": ["overlayscrollbars@2.17.0", "", {}, "sha512-tyFSxFVJ2FcTTiEkwMthAb+Ogs8vgpW31Sy5z2TL1Q6Kw7579zrcd4xDm38lmdD934LjiTHyrzR90KMDrbCXoA=="],
+    "overlayscrollbars": ["overlayscrollbars@2.17.1", "", {}, "sha512-EVBOsCB/BhvdP4WMLvIej8jHikJtGCxrWRBC8qX8xj3QmvSuY+PJgOr02du9Y2ad9dn9T8c7vp4MiMDQNWT9RQ=="],
 
     "own-keys": ["own-keys@1.0.1", "", { "dependencies": { "get-intrinsic": "1.3.0", "object-keys": "1.1.1", "safe-push-apply": "1.0.0" } }, "sha512-qFOyK5PjiWZd+QQIh+1jhdb9LpxTF0qs7Pm8o5QHYZ0M3vKqSqzsZaEB6oWlxZ+q2sJBMI/Ktgd2N5ZwQoRHfg=="],
 
