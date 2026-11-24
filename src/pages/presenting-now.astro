@@ -1,8 +1,8 @@
 ---
 import path from "node:path";
 import { Icon } from "astro-icon/components";
-import MainGridLayout from "../layouts/MainGridLayout.astro";
 import { musicRecommendations } from "../data/presenting-now";
+import MainGridLayout from "../layouts/MainGridLayout.astro";
 import { getImagePalette } from "../utils/image-palette";
 
 const latest = musicRecommendations[0];
@@ -12,7 +12,8 @@ const heroPalette = latest
 			path.join(process.cwd(), "public", latest.artwork.replace(/^\/+/, "")),
 		)
 	: ["#153c52", "#49304f", "#171421"];
-const heroBackground = `radial-gradient(ellipse at 12% 12%, color-mix(in srgb, var(--palette-a) 90%, transparent) 0%, transparent 52%), radial-gradient(ellipse at 88% 8%, color-mix(in srgb, var(--palette-b) 82%, transparent) 0%, transparent 48%), linear-gradient(132deg, var(--palette-c), #101017 88%)`;
+const heroBackground =
+	"radial-gradient(ellipse at 12% 12%, color-mix(in srgb, var(--palette-a) 90%, transparent) 0%, transparent 52%), radial-gradient(ellipse at 88% 8%, color-mix(in srgb, var(--palette-b) 82%, transparent) 0%, transparent 48%), linear-gradient(132deg, var(--palette-c), #101017 88%)";
 const heroStyle = `--palette-a: ${heroPalette[0]}; --palette-b: ${heroPalette[1]}; --palette-c: ${heroPalette[2]}; background: ${heroBackground};`;
 
 function formatDate(value: string) {
