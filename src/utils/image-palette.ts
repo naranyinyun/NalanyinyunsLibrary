@@ -77,7 +77,12 @@ export async function getImagePalette(imagePath: string): Promise<string[]> {
 				}
 			}
 
-			buckets.splice(candidateIndex, 1, sorted.slice(0, splitAt), sorted.slice(splitAt));
+			buckets.splice(
+				candidateIndex,
+				1,
+				sorted.slice(0, splitAt),
+				sorted.slice(splitAt),
+			);
 		}
 
 		return buckets
@@ -85,7 +90,10 @@ export async function getImagePalette(imagePath: string): Promise<string[]> {
 			.sort((a, b) => rgbToHsl(a).h - rgbToHsl(b).h)
 			.map(toDarkGradientColor);
 	} catch (error) {
-		console.warn(`Unable to extract colors from ${imagePath}; using fallback palette.`, error);
+		console.warn(
+			`Unable to extract colors from ${imagePath}; using fallback palette.`,
+			error,
+		);
 		return FALLBACK_PALETTE;
 	}
 }
@@ -104,9 +112,18 @@ function getRange(bucket: Bucket) {
 function getAverageColor(bucket: Bucket): Pick<ColorSample, "r" | "g" | "b"> {
 	const weight = bucket.reduce((sum, sample) => sum + sample.weight, 0);
 	return {
-		r: Math.round(bucket.reduce((sum, sample) => sum + sample.r * sample.weight, 0) / weight),
-		g: Math.round(bucket.reduce((sum, sample) => sum + sample.g * sample.weight, 0) / weight),
-		b: Math.round(bucket.reduce((sum, sample) => sum + sample.b * sample.weight, 0) / weight),
+		r: Math.round(
+			bucket.reduce((sum, sample) => sum + sample.r * sample.weight, 0) /
+				weight,
+		),
+		g: Math.round(
+			bucket.reduce((sum, sample) => sum + sample.g * sample.weight, 0) /
+				weight,
+		),
+		b: Math.round(
+			bucket.reduce((sum, sample) => sum + sample.b * sample.weight, 0) /
+				weight,
+		),
 	};
 }
 
@@ -147,5 +164,11 @@ function toDarkGradientColor(color: Pick<ColorSample, "r" | "g" | "b">) {
 	else if (section < 5) rgb = [x, 0, chroma];
 	else rgb = [chroma, 0, x];
 	const match = adjustedLightness - chroma / 2;
-	return `#${rgb.map((value) => Math.round((value + match) * 255).toString(16).padStart(2, "0")).join("")}`;
+	return `#${rgb
+		.map((value) =>
+			Math.round((value + match) * 255)
+				.toString(16)
+				.padStart(2, "0"),
+		)
+		.join("")}`;
 }

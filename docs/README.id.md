@@ -30,26 +30,28 @@ Template blog statis yang dibangun dengan [Astro](https://astro.build).
 ## 🚀 Memulai
 
 1. Buat repositori blog kamu:
-    - [Generate repositori baru](https://github.com/saicaca/fuwari/generate) dari template ini atau fork repositori ini.
-    - Atau jalankan salah satu perintah berikut:
-       ```sh
-        # npm
-        npm create fuwari@latest.
+   - [Generate repositori baru](https://github.com/saicaca/fuwari/generate) dari template ini atau fork repositori ini.
+   - Atau jalankan salah satu perintah berikut:
 
-        # yarn
-        yarn create fuwari.
+     ```sh
+      # npm
+      npm create fuwari@latest.
 
-        # pnpm
-        pnpm create fuwari@latest
+      # yarn
+      yarn create fuwari.
 
-        # bun
-        bun create fuwari@latest
+      # pnpm
+      pnpm create fuwari@latest
 
-        # deno
-        deno run -A npm:create-fuwari@latest
-        ```
+      # bun
+      bun create fuwari@latest
+
+      # deno
+      deno run -A npm:create-fuwari@latest
+     ```
+
 2. Untuk mengedit blog secara lokal, klon repositori kamu, jalankan `pnpm install` untuk instalasi dependensi.
-    - Install [pnpm](https://pnpm.io) `npm install -g pnpm` jika belum punya.
+   - Install [pnpm](https://pnpm.io) `npm install -g pnpm` jika belum punya.
 3. Edit file konfigurasi `src/config.ts` untuk menyesuaikan blog.
 4. Jalankan `pnpm new-post <nama-file>` untuk membuat postingan baru dan edit di `src/content/posts/`.
 5. Deploy blog ke Vercel, Netlify, GitHub Pages, dll. sesuai [panduan](https://docs.astro.build/en/guides/deploy/). Jangan lupa edit konfigurasi situs di `astro.config.mjs` sebelum deploy.
@@ -65,7 +67,7 @@ image: ./cover.jpg
 tags: [Foo, Bar]
 category: Front-end
 draft: false
-lang: id   # Isi hanya jika bahasa postingan berbeda dari bahasa default di `config.ts`
+lang: id # Isi hanya jika bahasa postingan berbeda dari bahasa default di `config.ts`
 ---
 ```
 
@@ -81,17 +83,17 @@ Selain dukungan default Astro untuk [GitHub Flavored Markdown](https://github.gi
 
 Semua perintah dijalankan dari root proyek, via terminal:
 
-| Perintah                     | Aksi                                                      |
-|:-----------------------------|:----------------------------------------------------------|
-| `pnpm install`               | Instalasi dependensi                                      |
-| `pnpm dev`                   | Menjalankan server dev lokal di `localhost:4321`          |
-| `pnpm build`                 | Build untuk produksi ke folder `./dist/`                  |
-| `pnpm preview`               | Pratinjau hasil build sebelum deploy                      |
-| `pnpm check`                 | Cek error atau masalah di kode                            |
-| `pnpm format`                | Format kode dengan Biome                                  |
-| `pnpm new-post <nama-file>`  | Membuat postingan baru                                    |
-| `pnpm astro ...`             | Jalankan perintah CLI seperti `astro add`, `astro check`  |
-| `pnpm astro --help`          | Bantuan menggunakan Astro CLI                             |
+| Perintah                    | Aksi                                                     |
+| :-------------------------- | :------------------------------------------------------- |
+| `pnpm install`              | Instalasi dependensi                                     |
+| `pnpm dev`                  | Menjalankan server dev lokal di `localhost:4321`         |
+| `pnpm build`                | Build untuk produksi ke folder `./dist/`                 |
+| `pnpm preview`              | Pratinjau hasil build sebelum deploy                     |
+| `pnpm check`                | Cek error atau masalah di kode                           |
+| `pnpm format`               | Format kode dengan Biome                                 |
+| `pnpm new-post <nama-file>` | Membuat postingan baru                                   |
+| `pnpm astro ...`            | Jalankan perintah CLI seperti `astro add`, `astro check` |
+| `pnpm astro --help`         | Bantuan menggunakan Astro CLI                            |
 
 ## ✏️ Kontribusi
 

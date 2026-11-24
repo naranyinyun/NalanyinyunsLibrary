@@ -1,7 +1,24 @@
 ---
 
 import { siteConfig } from "../config";
+
+interface Props {
+	hue?: number;
+	themeColorLight?: string;
+	themeColorDark?: string;
+}
+
+const {
+	hue = siteConfig.themeColor.hue,
+	themeColorLight,
+	themeColorDark,
+} = Astro.props;
 ---
 
-<div id="config-carrier" data-hue={siteConfig.themeColor.hue}>
+<div
+	id="config-carrier"
+	data-hue={hue}
+	data-theme-color-light={themeColorLight}
+	data-theme-color-dark={themeColorDark}
+>
 </div>

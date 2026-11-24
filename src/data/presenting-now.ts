@@ -10,11 +10,11 @@ export interface MusicRecommendation {
 
 export const musicRecommendations: MusicRecommendation[] = [
 	{
-		title: "Fuwaffin'girl",
-		album: "Never Forget Vacation 5",
-		artist: "Yu-dachi",
-		artwork: "/presenting/1200x1200bb.webp",
-		url: "https://music.apple.com/cn/album/fuwaffingirl/1849570976?i=1849571404",
-		recommendedAt: "2026-11-23",
+		title: "Wonder Scale",
+		album: "Wonder Scale - Single",
+		artist: "Hatsuboshi Gakuen、China Kuramoto",
+		artwork: "/presenting/900x900bb-60.jpg",
+		url: "https://music.apple.com/cn/song/wonder-scale/1744080738",
+		recommendedAt: "2026-11-24",
 	},
 ];

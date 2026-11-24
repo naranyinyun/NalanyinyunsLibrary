@@ -49,6 +49,19 @@ export function applyThemeToDocument(theme: LIGHT_DARK_MODE) {
 		"data-theme",
 		expressiveCodeConfig.theme,
 	);
+
+	// Sync browser theme-color meta tag with the active light/dark palette
+	const themeColorMeta = document.querySelector('meta[name="theme-color"]');
+	const configCarrier = document.getElementById("config-carrier");
+	if (themeColorMeta && configCarrier) {
+		const isDark = document.documentElement.classList.contains("dark");
+		const nextThemeColor = isDark
+			? configCarrier.dataset.themeColorDark
+			: configCarrier.dataset.themeColorLight;
+		if (nextThemeColor) {
+			themeColorMeta.setAttribute("content", nextThemeColor);
+		}
+	}
 }
 
 export function setTheme(theme: LIGHT_DARK_MODE): void {

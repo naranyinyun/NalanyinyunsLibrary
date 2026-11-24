@@ -1,4 +1,5 @@
 ---
+
 title: 为 CR6608 刷入 Openwrt
 published: 2026-02-10
 description: "本文将介绍如何为 CR6608 刷入 Openwrt，以及一些常见的问题和解决方法。"
@@ -6,13 +7,13 @@ tags: [openwrt]
 category: 技术
 draft: false
 ---
+
 # 为 CR6608 刷入 Openwrt
 
 ### 准备
 
 1. Openwrt 固件
 2. 一台 CR6608
-
 
 ### 获取 SSH
 
@@ -27,7 +28,7 @@ draft: false
 
 通过 SSH 连接 CR6608
 
-``` shell
+```shell
 ssh root@[CR6608 IP]
 ```
 
@@ -35,7 +36,7 @@ ssh root@[CR6608 IP]
 
 下载 [pb-boot](https://gsg2rtttmkjb.sg.larksuite.com/file/Xd3DbJDgeoAgQHxktbclfaRdgnz?from=from_copylink) 的链接
 
-``` shell
+```shell
 scp -O [pb-boot path] root@[CR6608 IP]:/tmp
 ssh root@[CR6608 IP]
 mtd write /tmp/pb-boot.img Bootloader
@@ -55,4 +56,3 @@ mtd write /tmp/pb-boot.img Bootloader
 
 > [!WARNING]
 > 你可能会在主线 Openwrt 稳定版上遇到 ssh 连接的问题，可以切换到 snapshot 或者换成 Immortalwrt
-

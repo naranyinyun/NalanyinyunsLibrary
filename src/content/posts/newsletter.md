@@ -1,4 +1,5 @@
 ---
+
 title: 利用 Resend 和 Workers 零成本实现电子邮件订阅
 published: 2026-03-11
 description: 利用 Resend，Workers，GitHub Action 和 Tally 搭建一个全自动的邮件订阅系统
@@ -175,50 +176,55 @@ Resend [Audience](https://resend.com/docs/dashboard/segments/introduction)。这
 
 Cloudflare Workers 主要负责解析 Webhook 传入的数据，因为我实在是不懂 JavaScript，所以找 Gemini 生成一个勉强能用的后端。
 
-``` javascript
+```javascript
 export default {
-  async fetch(request, env, ctx) {
-    if (request.method !== "POST") {
-      return new Response("Method Not Allowed", { status: 405 });
-    }
+	async fetch(request, env, ctx) {
+		if (request.method !== "POST") {
+			return new Response("Method Not Allowed", { status: 405 });
+		}
 
-    try {
-      const body = await request.json();
-      const emailField = body.data.fields.find(f => f.type === "INPUT_EMAIL");
-      const userEmail = emailField ? emailField.value : null;
+		try {
+			const body = await request.json();
+			const emailField = body.data.fields.find((f) => f.type === "INPUT_EMAIL");
+			const userEmail = emailField ? emailField.value : null;
 
-      if (!userEmail) {
-        return new Response("No email found in webhook data", { status: 400 });
-      }
+			if (!userEmail) {
+				return new Response("No email found in webhook data", { status: 400 });
+			}
 
-      const segmentId = env.RESEND_SEGMENT_ID; 
-      const url = `https://api.resend.com/segments/${segmentId}/contacts`;
+			const segmentId = env.RESEND_SEGMENT_ID;
+			const url = `https://api.resend.com/segments/${segmentId}/contacts`;
 
-      const resendResponse = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${env.RESEND_API_KEY}`,
-        },
-        body: JSON.stringify({
-          email: userEmail,
-        }),
-      });
+			const resendResponse = await fetch(url, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${env.RESEND_API_KEY}`,
+				},
+				body: JSON.stringify({
+					email: userEmail,
+				}),
+			});
 
-      const result = await resendResponse.json();
+			const result = await resendResponse.json();
 
-      if (resendResponse.ok) {
-        console.log(`Success: Added ${userEmail} to segment`);
-        return new Response("Subscribed to segment successfully!", { status: 200 });
-      } else {
-        console.error("Resend API Error:", result);
-        return new Response(JSON.stringify(result), { status: resendResponse.status });
-      }
-
-    } catch (err) {
-      return new Response("Internal Server Error: " + err.message, { status: 500 });
-    }
-  },
+			if (resendResponse.ok) {
+				console.log(`Success: Added ${userEmail} to segment`);
+				return new Response("Subscribed to segment successfully!", {
+					status: 200,
+				});
+			} else {
+				console.error("Resend API Error:", result);
+				return new Response(JSON.stringify(result), {
+					status: resendResponse.status,
+				});
+			}
+		} catch (err) {
+			return new Response("Internal Server Error: " + err.message, {
+				status: 500,
+			});
+		}
+	},
 };
 ```
 
@@ -251,7 +257,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: "3.10"
 
       - name: Install Dependencies
         run: pip install requests resend

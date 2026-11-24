@@ -4,7 +4,9 @@ import PostPage from "../components/PostPage.astro";
 import MainGridLayout from "../layouts/MainGridLayout.astro";
 import { getSortedPosts } from "../utils/content-utils";
 
-const featuredPosts = (await getSortedPosts()).filter((post) => post.data.featured);
+const featuredPosts = (await getSortedPosts()).filter(
+	(post) => post.data.featured,
+);
 ---
 
 <MainGridLayout title="精选文章">

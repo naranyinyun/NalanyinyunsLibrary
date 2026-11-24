@@ -19,6 +19,7 @@ import {
 } from "../constants/constants";
 import { defaultFavicons } from "../constants/icon";
 import type { Favicon } from "../types/config";
+import { getBannerMonetTheme } from "../utils/monet-theme";
 import { pathsEqual, url } from "../utils/url-utils";
 
 interface Props {
@@ -38,13 +39,22 @@ const isHomePage = pathsEqual(Astro.url.pathname, url("/"));
 
 // defines global css variables
 // why doing this in Layout instead of GlobalStyles: https://github.com/withastro/astro/issues/6728#issuecomment-1502203757
-const configHue = siteConfig.themeColor.hue;
 if (!banner || typeof banner !== "string" || banner.trim() === "") {
 	banner = siteConfig.banner.src;
 }
 
 // TODO don't use post cover as banner for now
 banner = siteConfig.banner.src;
+
+const monetTheme = await getBannerMonetTheme(
+	banner,
+	siteConfig.themeColor.monet,
+);
+const monetEnabled = Boolean(monetTheme);
+const configHue = monetTheme?.hue ?? siteConfig.themeColor.hue;
+const themeColorFixed = siteConfig.themeColor.fixed;
+const themeColorLight = monetTheme?.themeColorLight ?? "#ffffff";
+const themeColorDark = monetTheme?.themeColorDark ?? "#161618";
 
 const enableBanner = siteConfig.banner.enable;
 
@@ -75,11 +85,12 @@ const bannerOffset =
 
 <!DOCTYPE html>
 <html lang={siteLang} class="bg-[var(--page-bg)] transition text-[14px] md:text-[16px]"
+	  data-monet-theme={monetTheme ? monetTheme.variant : undefined}
 	  data-overlayscrollbars-initialize
 	>
 	<head>
 		<link rel="manifest" href="/manifest.webmanifest" />
-		<meta name="theme-color" content="#ffffff" />
+		<meta name="theme-color" content={themeColorLight} />
 
 
 		<title>{pageTitle}</title>
@@ -114,7 +125,7 @@ const bannerOffset =
 		))}
 
 		<!-- Set the theme before the page is rendered to avoid a flash -->
-		<script is:inline define:vars={{DEFAULT_THEME, LIGHT_MODE, DARK_MODE, AUTO_MODE, BANNER_HEIGHT_EXTEND, PAGE_WIDTH, configHue}}>
+		<script is:inline define:vars={{DEFAULT_THEME, LIGHT_MODE, DARK_MODE, AUTO_MODE, BANNER_HEIGHT_EXTEND, PAGE_WIDTH, configHue, themeColorFixed, monetEnabled, themeColorLight, themeColorDark}}>
 			// Load the theme from local storage
 			const theme = localStorage.getItem('theme') || DEFAULT_THEME;
 			switch (theme) {
@@ -132,8 +143,15 @@ const bannerOffset =
 					}
 			}
 
-			// Load the hue from local storage
-			const hue = localStorage.getItem('hue') || configHue;
+			// Sync browser theme-color meta tag
+			const themeColorMeta = document.querySelector('meta[name="theme-color"]');
+			if (themeColorMeta) {
+				const isDark = document.documentElement.classList.contains('dark');
+				themeColorMeta.setAttribute('content', isDark ? themeColorDark : themeColorLight);
+			}
+
+			// Load the hue from local storage unless themeColor is fixed or Monet is active
+			const hue = (themeColorFixed || monetEnabled) ? configHue : (localStorage.getItem('hue') || configHue);
 			document.documentElement.style.setProperty('--hue', hue);
 
 			// calculate the --banner-height-extend, which needs to be a multiple of 4 to avoid blurry text
@@ -145,6 +163,7 @@ const bannerOffset =
 			configHue,
 			'page-width': `${PAGE_WIDTH}rem`,
 		}}></style>  <!-- defines global css variables. This will be applied to <html> <body> and some other elements idk why -->
+		{monetTheme && <style is:inline set:html={monetTheme.css} />}
 
 
 		<slot name="head"></slot>
@@ -170,7 +189,11 @@ const bannerOffset =
 				<button id="pwa-update-dismiss" type="button">稍后</button>
 			</div>
 		</div>
-		<ConfigCarrier></ConfigCarrier>
+		<ConfigCarrier
+			hue={configHue}
+			themeColorLight={themeColorLight}
+			themeColorDark={themeColorDark}
+		></ConfigCarrier>
 		<slot />
 
 		<!-- increase the page height during page transition to prevent the scrolling animation from jumping -->

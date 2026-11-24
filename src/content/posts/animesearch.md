@@ -1,10 +1,11 @@
 ---
+
 title: 以结构化的方式搜索番剧：AnimeSearch
 published: 2026-07-30
 description: 'AnimeSearch、MagnetCheck 和 AnimeSearch API'
 tags: [web]
 category: '技术'
-draft: false 
+draft: false
 ---
 
 ## Intro

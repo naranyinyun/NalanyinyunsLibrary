@@ -1,4 +1,5 @@
 ---
+
 title: Archlinux 安装指南
 published: 2026-02-18
 tags: [linux]
@@ -29,7 +30,6 @@ draft: false
 > [!TIP]
 > Windows 按住 `Shift` 键点击重启进入高级启动模式，可以直接进入 UEFI 固件设置，在一些启用了快速启动的设备上非常有用。
 
-
 如果需要，可以调整启动顺序，将 USB 设备设置为第一启动项。
 
 ## 安装 Archlinux
@@ -42,20 +42,20 @@ draft: false
 
 首先确认系统识别到了网络接口：
 
-``` shell
+```shell
 ip link
 ```
 
 确认网卡没有被 `rfkill`
 
-``` shell
+```shell
 rfkill list
 rfkill unblock all # 如果被阻止，解除阻止，可以指定设备，不用 all
 ```
 
 进入 `iwctl` 交互式命令行：
 
-``` shell
+```shell
 iwctl
 device list # 列出无线设备
 station [device name] scan
@@ -65,7 +65,7 @@ station [device name] connect [SSID]
 
 ### 系统时间
 
-``` shell
+```shell
 timedatectl set-ntp true
 ```
 
@@ -79,7 +79,7 @@ timedatectl set-ntp true
 由于不同设备的硬盘使用情况不同，这里不做具体介绍。不过，大致的分区方案如下：
 
 - EFI 系统分区（ESP）推荐大小 1GB，我推荐 4GB。格式化为 FAT32
-- 根分区 `/`  至少 20GB, 推荐 60GB, 格式化为 btrfs
+- 根分区 `/` 至少 20GB, 推荐 60GB, 格式化为 btrfs
 - SWAP 是可选的，通常至少有 4GB，不过你也可以用 swapfile 替代，它更灵活，在安装系统后配置。格式化为 swap
 
 如果你的 EFI 由 Windows 创建，512MB 的大小通常不够，请扩大到至少 1GB。
@@ -89,7 +89,7 @@ timedatectl set-ntp true
 
 如果你需要创建 btrfs 子卷，可以参考下面的命令：
 
-``` shell
+```shell
 mount -t btrfs -o compress=zstd /dev/sdxn /mnt
 btrfs subvolume create /mnt/@
 btrfs subvolume create /mnt/@home
@@ -97,7 +97,7 @@ btrfs subvolume create /mnt/@home
 
 别忘了卸载分区：
 
-``` shell
+```shell
 umount /mnt
 ```
 
@@ -110,7 +110,7 @@ umount /mnt
 
 挂载分区：
 
-``` shell
+```shell
 mount -t btrfs -o subvol=/@,compress=zstd /dev/sdxn /mnt # 根分区
 mount -t btrfs -o subvol=/@home,compress=zstd /dev/sdxn /mnt/home # home 分区
 mount /dev/sdxn /mnt/boot # EFI 分区
@@ -118,7 +118,7 @@ mount /dev/sdxn /mnt/boot # EFI 分区
 
 按顺序挂载，如果提示没有挂载点，创建它：
 
-``` shell
+```shell
 mkdir -p [mount point]
 ```
 
@@ -126,7 +126,7 @@ mkdir -p [mount point]
 
 使用 `pacstrap` 安装基础包：
 
-``` shell
+```shell
 pacstrap /mnt base linux linux-firmware btrfs-progs nano
 ```
 
@@ -136,7 +136,7 @@ pacstrap /mnt base linux linux-firmware btrfs-progs nano
 
 生成 `fstab` 文件：
 
-``` shell
+```shell
 genfstab -U /mnt >> /mnt/etc/fstab
 ```
 
@@ -144,7 +144,7 @@ genfstab -U /mnt >> /mnt/etc/fstab
 
 切换到新安装的系统：
 
-``` shell
+```shell
 arch-chroot -S /mnt
 ```
 
@@ -155,7 +155,7 @@ arch-chroot -S /mnt
 
 设置时区：
 
-``` shell
+```shell
 ln -sf /usr/share/zoneinfo/Region/City /etc/localtime
 hwclock --systohc
 ```
@@ -164,20 +164,20 @@ hwclock --systohc
 
 编辑 `/etc/locale.gen`，取消需要的语言的注释，你通常需要它们两个：
 
-``` plain
+```plain
 en_US.UTF-8 UTF-8
 zh_CN.UTF-8 UTF-8
 ```
 
 生成语言环境：
 
-``` shell
+```shell
 locale-gen
 ```
 
 创建 `/etc/locale.conf` 文件，添加以下内容：
 
-``` plain
+```plain
 LANG=en_US.UTF-8
 ```
 
@@ -188,13 +188,13 @@ LANG=en_US.UTF-8
 
 设置 root 密码：
 
-``` shell
+```shell
 passwd
 ```
 
 添加新用户：
 
-``` shell
+```shell
 useradd -m -G wheel -s /bin/bash username
 passwd username
 ```
@@ -212,7 +212,7 @@ passwd username
 
 安装 `systemd-boot`：
 
-``` shell
+```shell
 bootctl install
 ```
 
@@ -221,13 +221,13 @@ bootctl install
 
 创建引导项：
 
-``` shell
+```shell
 nano /boot/loader/entries/arch.conf
 ```
 
 在文件中添加以下内容：
 
-``` plain
+```plain
 title   Arch Linux
 linux   /vmlinuz-linux
 initrd  /initramfs-linux.img
@@ -240,7 +240,7 @@ UUID 通常可以使用 `blkid` 获取。
 
 安装 `systemd-ukify`：
 
-``` shell
+```shell
 pacman -S systemd-ukify
 ```
 
@@ -269,19 +269,19 @@ fallback_options="-S autodetect"
 
 创建那些目录：
 
-``` shell
+```shell
 mkdir -p /boot/EFI/Linux
 ```
 
 使用 `mkinitcpio` 重新生成：
 
-``` shell
+```shell
 mkinitcpio -P
 ```
 
 安装 `systemd-boot`：
 
-``` shell
+```shell
 bootctl install
 ```
 
@@ -294,19 +294,19 @@ bootctl install
 
 退出 `chroot` 环境：
 
-``` shell
+```shell
 exit
 ```
 
 卸载分区：
 
-``` shell
+```shell
 umount -R /mnt
 ```
 
 重启系统：
 
-``` shell
+```shell
 reboot
 ```
 
@@ -318,41 +318,41 @@ reboot
 
 我通常用 `systemd-networkd` 和 `systemd-resolved` 来配置网络。只需要启用这两个服务就可以了：
 
-``` shell
+```shell
 systemctl enable systemd-networkd
 systemctl enable systemd-resolved
 ```
 
 创建网络配置文件 `/etc/systemd/network/20-wired.network`：
 
-``` plain
+```plain
 [Match]
 Name=[DEVICE NAME]
 [Network]
 DHCP=yes
-``` 
+```
 
 链接 `resolv.conf`：
 
-``` shell
+```shell
 ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
 ```
 
 ### 安装 sudo
 
-``` shell
+```shell
 pacman -S sudo
 ```
 
 编辑 `/etc/sudoers` 文件，取消注释 `wheel` 用户组的权限：
 
-``` shell
+```shell
 nano /etc/sudoers
 ```
 
 找到并取消注释以下行：
 
-``` plain
+```plain
 %wheel ALL=(ALL:ALL) ALL
 ```
 
@@ -362,7 +362,7 @@ nano /etc/sudoers
 
 ### DE/WM
 
-大多数教程会推荐 KDE Plasma, 不过我更喜欢 Hyprland. 
+大多数教程会推荐 KDE Plasma, 不过我更喜欢 Hyprland.
 
 当然我是照搬别人的 dotfiles, 如果你也想用，可以看看 [End4](https://ii.clsty.link/)
 
@@ -370,6 +370,6 @@ nano /etc/sudoers
 
 谁不喜欢 `systemd` 呢？我们用 `hostnamectl` 设置主机名：
 
-``` shell
+```shell
 hostnamectl set-hostname myarchlinux
 ```

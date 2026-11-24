@@ -1,5 +1,23 @@
 import type { AUTO_MODE, DARK_MODE, LIGHT_MODE } from "@constants/constants";
 
+export type MonetVariant =
+	| "fidelity"
+	| "content"
+	| "tonalSpot"
+	| "vibrant"
+	| "expressive"
+	| "neutral"
+	| "monochrome"
+	| "rainbow"
+	| "fruitSalad";
+
+export type MonetConfig = {
+	enable: boolean;
+	variant?: MonetVariant;
+	/** Contrast level from -1 (minimum) to 1 (maximum), 0 is standard. */
+	contrastLevel?: number;
+};
+
 export type SiteConfig = {
 	title: string;
 	subtitle: string;
@@ -19,6 +37,7 @@ export type SiteConfig = {
 	themeColor: {
 		hue: number;
 		fixed: boolean;
+		monet?: MonetConfig;
 	};
 	banner: {
 		enable: boolean;

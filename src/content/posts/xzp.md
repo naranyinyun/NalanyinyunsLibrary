@@ -1,4 +1,5 @@
 ---
+
 title: 来自九年前的远古音频兵器 - Xperia XZ Premium
 published: 2026-05-24
 description: "从 Android 音频链路中一睹当年顶级旗舰的音频风采"
@@ -24,13 +25,13 @@ XZP 搭载了高通 msm8998 SoC，也就是高通骁龙 835。它的硬件基础
 
 如果你对硬件感兴趣，这是一些来自其它网站的数据：
 
-| 测试项目 | 44.1kHz | 48kHz | 96kHz | Z3 |
-|---|---:|---:|---:|---:|
-| 噪声水平，dB (A) | -96.0 | -96.7 | -100.5 | -86.6 |
-| 动态范围，dB (A) | 95.8 | 96.6 | 105.1 | 86.5 |
-| 总谐波失真，% | 0.0016 | 0.0069 | 0.0067 | 0.012 |
-| 互调失真，% | 0.0055 | 0.0050 | 0.0023 | 0.019 |
-| 立体声分离度，dB | -90.0 | -90.3 | -88.5 | -86.4 |
+| 测试项目         | 44.1kHz |  48kHz |  96kHz |    Z3 |
+| ---------------- | ------: | -----: | -----: | ----: |
+| 噪声水平，dB (A) |   -96.0 |  -96.7 | -100.5 | -86.6 |
+| 动态范围，dB (A) |    95.8 |   96.6 |  105.1 |  86.5 |
+| 总谐波失真，%    |  0.0016 | 0.0069 | 0.0067 | 0.012 |
+| 互调失真，%      |  0.0055 | 0.0050 | 0.0023 | 0.019 |
+| 立体声分离度，dB |   -90.0 |  -90.3 |  -88.5 | -86.4 |
 
 上述数据以及更详细的硬件测试，见 [Soomal](https://soomal.cc/posts/10100007321/)，我并不是太懂这方面，所以不说太多了，本文重点也不在此。
 
@@ -124,7 +125,7 @@ outputs {
 
 对于一般的应用输出音频，无论音频规格有多高，输出线程通常都是 MIXER（type 0），来看一个例子：
 
-``` plain
+```plain
 output thread 0xf3603f40, name AudioOut_D, tid 1218, type 0 (MIXER):
   I/O handle: 13
   Standby: no
@@ -496,7 +497,7 @@ Output thread 0xf3064000, name AudioOut_67D, tid 31664, type 4 (OFFLOAD):
   Suspended frames: 0
 ```
 
-观察到模式是 OFFLOAD（type 4），HAL 识别到了是 AUDIO_FORMAT_MP3，并携带了  `AUDIO_OUTPUT_FLAG_DIRECT|AUDIO_OUTPUT_FLAG_COMPRESS_OFFLOAD|AUDIO_OUTPUT_FLAG_NON_BLOCKING` 这些 FLAGS。这些 FLAG 大致的意思就是 DIRECT 输出，不进行压缩，以非阻塞的方式输出。
+观察到模式是 OFFLOAD（type 4），HAL 识别到了是 AUDIO_FORMAT_MP3，并携带了 `AUDIO_OUTPUT_FLAG_DIRECT|AUDIO_OUTPUT_FLAG_COMPRESS_OFFLOAD|AUDIO_OUTPUT_FLAG_NON_BLOCKING` 这些 FLAGS。这些 FLAG 大致的意思就是 DIRECT 输出，不进行压缩，以非阻塞的方式输出。
 
 在此音频路径中 MP3 被直接 HAL 送进了 DSP 进行解码，CPU 没有参与音频处理。它也绕过了 MIXER 的那些重采样和位深转换，在播放不同规格的 MP3 文件时观察到了 HAL 规格变化。
 

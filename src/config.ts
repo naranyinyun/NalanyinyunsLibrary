@@ -12,17 +12,22 @@ export const siteConfig: SiteConfig = {
 	subtitle: "纳兰音韵的大图书馆",
 	lang: "zh_CN", // Language code, e.g. 'en', 'zh_CN', 'ja', etc.
 	themeColor: {
-		hue: 190, // Default hue for the theme color, from 0 to 360. e.g. red: 0, teal: 200, cyan: 250, pink: 345
+		hue: 190, // Default hue for the theme color (fallback when monet is disabled), from 0 to 360. e.g. red: 0, teal: 200, cyan: 250, pink: 345
 		fixed: true, // Hide the theme color picker for visitors
+		monet: {
+			enable: true, // Automatically generate site color scheme from the banner image using Monet (Material You)
+			variant: "fidelity", // 'fidelity' | 'content' | 'tonalSpot' | 'vibrant' | 'expressive' | 'neutral' | 'monochrome' | 'rainbow' | 'fruitSalad'
+			contrastLevel: 0, // Contrast level from -1 (minimum) to 1 (maximum), 0 is standard
+		},
 	},
 	banner: {
 		enable: true,
-		src: "assets/images/110590121.jpg", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
+		src: "assets/images/145209167.png", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
 		position: "top", // Equivalent to object-position, only supports 'top', 'center', 'bottom'. 'center' by default
 		credit: {
 			enable: true, // Display the credit text of the banner image
-			text: "In the gray", // Credit text to be displayed
-			url: "https://www.pixiv.net/artworks/110590121", // (Optional) URL link to the original artwork or artist's page
+			text: "姫崎莉波✖️Vino", // Credit text to be displayed
+			url: "https://www.pixiv.net/artworks/145209167.png", // (Optional) URL link to the original artwork or artist's page
 		},
 	},
 	toc: {

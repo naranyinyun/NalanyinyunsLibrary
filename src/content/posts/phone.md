@@ -1,4 +1,5 @@
 ---
+
 title: 我们购买的设备，真的属于我们吗？一份来自普通消费者的观察报告
 published: 2026-10-24
 tags: [insight]
@@ -6,6 +7,7 @@ category: '洞察'
 creationStatement: "本文使用 AI 搜集资料，修改文本以及整理和梳理内容，不涉及文本生成"
 author: "Nalanyinyun、ChatGPT"
 ---
+
 ## 导论
 
 这些年来，这样的变化在消费电子市场已经并不少见：国内手机厂商持续收紧 Bootloader 解锁政策; 新的路由器普遍不再开放 root shell; 预装了 Windows 的电脑关闭 Secure Boot 变得愈加困难、使用自签发证书在某些设备上甚至会损坏 UEFI 固件。

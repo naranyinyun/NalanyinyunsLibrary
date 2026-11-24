@@ -1,11 +1,13 @@
 ---
+
 title: Goldenfiled
 published: 2026-08-07
 tags: [novel]
 category: '花丛'
-draft: false 
+draft: false
 featured: true
 ---
+
 我把一直放在抽屉里的风铃挂在了窗户边上，趁着这还是一个风季。
 
 其实所谓的风铃，本就是吹着风才会摇晃，才有清脆的声响的。一直放在抽屉里面，见不到风，怎么还能叫风铃呢？

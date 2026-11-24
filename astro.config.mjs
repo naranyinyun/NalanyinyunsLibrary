@@ -259,6 +259,9 @@ export default defineConfig({
 	},
 
 	vite: {
+		ssr: {
+			noExternal: ["@material/material-color-utilities"],
+		},
 		build: {
 			rollupOptions: {
 				onwarn(warning, warn) {
