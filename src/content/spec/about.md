@@ -15,8 +15,7 @@ _**不要调戏正在看书的图书委员**_
 如需验证本站归属或确认本站发布的声明未经篡改，可通过以下公开信息自行验证：
 
 - **站长 / 维护者**：Nalanyinyun (`Nalanyinyun Gakuen Library Iinkai`)
-- **GitHub**：[naranyinyun](https://github.com/naranyinyun)
-- **Email**：`nalanyinyun@nalanyinyun.work`
+- **GitHub**：[naranyinyun](https://github.com/naranyinyun)`
 - **PGP 指纹**：`AD48 2703 94E6 0D63 87D5 A637 446A FB6D C069 8192`
 - **公钥文件**：[public.asc](/.well-known/public.asc)
 - **签名声明**：[ownership.txt](/.well-known/ownership.txt)
@@ -24,7 +23,7 @@ _**不要调戏正在看书的图书委员**_
 ### 命令行快速验签
 
 ```bash
-# 导入公钥（可直接从 keys.openpgp.org）
+# 导入公钥（可直接从 keys.openpgp.org 获取）
 curl -fsSL https://nalanyinyun.work/.well-known/public.asc | gpg --import
 
 # 验证站点归属声明
