@@ -1,0 +1,18 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+I am Tosho lin of Nalanyinyun Gakuen Library Iinkai, owner and maintainer of Nalanyinyun's library.
+This PublicKey has been uploaded to opengpg server for verification.
+
+Domain: https://nalanyinyun.work
+GitHub: https://github.com/naranyinyun
+Email: nalanyinyun@nalanyinyun.work
+PGP Fingerprint: AD48270394E60D6387D5A637446AFB6DC0698192
+Date: 2026-11-27
+-----BEGIN PGP SIGNATURE-----
+
+iHUEARYKAB0WIQStSCcDlOYNY4fVpjdEavttwGmBkgUCawhdSQAKCRBEavttwGmB
+kjBJAQDDoWj3vpei9n+ULBjsKV3eCm5MPbapq4mb2kcHtblKiAEA8HoHds8sqV+y
+Mw5GRvCA/YHOO57PEAa8sPhIH/c2ZQk=
+=2VaM
+-----END PGP SIGNATURE-----
