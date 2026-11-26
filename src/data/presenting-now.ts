@@ -10,11 +10,11 @@ export interface MusicRecommendation {
 
 export const musicRecommendations: MusicRecommendation[] = [
 	{
-		title: "Wonder Scale",
-		album: "Wonder Scale - Single",
-		artist: "Hatsuboshi Gakuen、China Kuramoto",
-		artwork: "/presenting/900x900bb-60.jpg",
-		url: "https://music.apple.com/cn/song/wonder-scale/1744080738",
-		recommendedAt: "2026-11-24",
+		title: "Cool Me Down",
+		album: "Cool Me Down - Single",
+		artist: "Mwk、巡音ルカ",
+		artwork: "/presenting/cool_me_down.jpg",
+		url: "https://beta.music.apple.com/cn/song/cool-me-down/1703764350",
+		recommendedAt: "2026-11-26",
 	},
 ];

@@ -212,12 +212,7 @@ a.card-github.fetch-waiting
   transition: opacity 0.2s ease-in-out
 
   .gc-description, .gc-infobar, .gc-avatar
-    background: linear-gradient(
-      110deg,
-      color-mix(in srgb, var(--tw-prose-body) 10%, transparent) 25%,
-      color-mix(in srgb, var(--md-sys-color-primary, var(--primary)) 22%, transparent) 45%,
-      color-mix(in srgb, var(--tw-prose-body) 10%, transparent) 65%
-    )
+    background: unquote("linear-gradient(110deg, color-mix(in srgb, var(--tw-prose-body) 10%, transparent) 25%, color-mix(in srgb, var(--md-sys-color-primary, var(--primary)) 22%, transparent) 45%, color-mix(in srgb, var(--tw-prose-body) 10%, transparent) 65%)")
     background-size: 220% 100%
     color: transparent
     animation: m3-shimmer 1.6s cubic-bezier(0.4, 0, 0.2, 1) infinite
