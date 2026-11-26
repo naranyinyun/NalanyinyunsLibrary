@@ -10,7 +10,7 @@ export interface MusicRecommendation {
 
 export const musicRecommendations: MusicRecommendation[] = [
 	{
-		title: "WonderScale",
+		title: "Wonder Scale",
 		album: "Wonder Scale - Single",
 		artist: "Hatsuboshi Gakuen、China Kuramoto",
 		artwork: "/presenting/900x900bb-60.jpg",
